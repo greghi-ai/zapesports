@@ -345,35 +345,34 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 
 /* ---------- por dentro (câmera voa para dentro do símbolo) ---------- */
 .dive{position:relative;height:480vh;border-top:1px solid var(--line)}
-.dive-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);overflow:hidden;background:radial-gradient(60% 55% at 50% 42%,rgba(218,165,32,.14),transparent 70%),var(--ink)}
-.dive-gold{position:absolute;inset:0;background:var(--gold);opacity:0}
-.dive-logo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,28px)}
-.dive-sym{width:min(56vh,62vw);height:auto;display:block;transform-origin:87.2% 85.3%;will-change:transform;filter:drop-shadow(0 20px 40px rgba(0,0,0,.45))}
-.dive-under{display:flex;flex-direction:column;align-items:center;gap:12px}
-.dive-under img{width:clamp(150px,18vw,220px);height:auto}
+.dive-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);overflow:hidden;background:#000}
+.dive-white{position:absolute;inset:0;background:#fff;opacity:0}
+.dive-logo{position:absolute;inset:0}
+.dive-hint{position:absolute;left:0;right:0;bottom:clamp(18px,5vh,44px);text-align:center}
+.dive-sym{position:absolute;left:50%;top:50%;width:min(34vh,46vw);height:auto;margin:0;display:block;transform-origin:0 0;overflow:visible}
 .dive-hint{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
 .dive-hint::after{content:"";display:block;width:1px;height:26px;margin:10px auto 0;background:linear-gradient(var(--gold),transparent);animation:drip 1.8s ease-in-out infinite}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .dive-frame{position:absolute;inset:0;color:#140f02;pointer-events:none}
 .dive-nav{position:absolute;top:clamp(14px,3vh,28px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:24px;background:rgba(20,15,2,.1);border:1px solid rgba(20,15,2,.18);opacity:0}
 .dive-nav span{padding:7px 14px;border-radius:18px;font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,15,2,.6);transition:background .5s,color .5s;white-space:nowrap}
-.dive-nav span.on{background:#140f02;color:var(--gold)}
+.dive-nav span.on{background:#140f02;color:#fff}
 .pd{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(70px,10vh,110px) max(16px,calc((100% - 1240px)/2 + 16px)) clamp(24px,6vh,60px);opacity:0;pointer-events:none;will-change:transform,opacity}
 .pd.live{pointer-events:auto}
-.pd .eyebrow{color:#140f02;opacity:.7}
+.pd .eyebrow{color:#b8860b}
 .pd-head{display:flex;flex-direction:column;gap:14px}
-.pd-num{font-family:var(--f-display);font-weight:900;font-size:clamp(110px,15vw,220px);line-height:.8;color:#140f02}
+.pd-num{font-family:var(--f-display);font-weight:900;font-size:clamp(110px,15vw,220px);line-height:.8;color:var(--gold)}
 .pd-num.sm{font-size:clamp(76px,9vw,150px);white-space:nowrap}
 .pd-head h3{font-size:clamp(34px,4.4vw,64px);margin-top:8px;color:#140f02}
 .pd-head p{color:rgba(20,15,2,.78);font-size:17px;max-width:40ch;margin-top:10px}
 .pd-models{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.pd-m{position:relative;padding:0;border:0;border-radius:3px;overflow:hidden;background:#d9d7d2;cursor:pointer;aspect-ratio:3/4;text-align:left;box-shadow:0 10px 24px rgba(60,40,0,.25);transition:transform .4s cubic-bezier(.22,.8,.26,1)}
+.pd-m{position:relative;padding:0;border:0;border-radius:3px;overflow:hidden;background:#d9d7d2;cursor:pointer;aspect-ratio:3/4;text-align:left;box-shadow:0 12px 28px rgba(0,0,0,.16);transition:transform .4s cubic-bezier(.22,.8,.26,1)}
 .pd-m img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;transition:transform .6s cubic-bezier(.22,.8,.26,1)}
 .pd-m span{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(10,9,8,.9));font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper)}
 .pd-m:hover{transform:translateY(-4px)}.pd-m:hover img{transform:scale(1.06)}
 .pd-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .pd-c{display:flex;flex-direction:column;gap:6px}
-.pd-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;display:block;box-shadow:0 10px 24px rgba(60,40,0,.25)}
+.pd-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;display:block;box-shadow:0 12px 28px rgba(0,0,0,.16)}
 .pd-c b{font-family:var(--f-label);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
 .pd-c span{font-size:14px;color:rgba(20,15,2,.72)}
 .pd-sizes{display:flex;flex-direction:column;gap:16px}
@@ -381,7 +380,7 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 .sz-l{font-family:var(--f-label);font-weight:700;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:rgba(20,15,2,.65)}
 .sz{display:flex;flex-wrap:wrap;gap:8px}
 .sz i{font-style:normal;min-width:64px;height:64px;padding:0 14px;display:grid;place-items:center;border:2px solid #140f02;border-radius:3px;font-family:var(--f-display);font-weight:900;font-size:30px}
-.sz-row.plus i{background:#140f02;color:var(--gold);font-size:22px}
+.sz-row.plus i{background:var(--gold);border-color:var(--gold);color:#140f02;font-size:22px}
 .pd-models>*,.pd-cards>*,.pd-sizes>*{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform 1s cubic-bezier(.22,.8,.26,1);transition-delay:calc(var(--j)*70ms)}
 .pd.on .pd-models>*,.pd.on .pd-cards>*,.pd.on .pd-sizes>*{opacity:1;transform:none}
 .pd.on .pd-m:hover{transform:translateY(-4px)}
@@ -536,10 +535,10 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 
   <section class="dive" id="por-dentro" aria-label="Por dentro da ZAPE">
     <div class="dive-pin" id="divePin">
-      <div class="dive-gold" id="diveGold"></div>
-      <div class="dive-logo" id="diveLogo">
-        <img class="dive-sym" id="diveSym" src="assets/info/sym_gold.png" alt="">
-        <div class="dive-under" id="diveUnder"><img src="assets/logo.png" alt="ZAPE Sport Wear"><span class="dive-hint">Role para entrar</span></div>
+      <div class="dive-white" id="diveWhite"></div>
+      <div class="dive-logo">
+        <svg class="dive-sym" id="diveSym" viewBox="0 0 882 881" aria-hidden="true"><path fill="#fff" fill-rule="evenodd" d="M839.93,417.67 L832.40,409.00 L827.00,403.33 L820.17,397.05 L812.17,390.19 L797.17,379.76 L788.33,374.65 L780.00,370.46 L770.67,366.45 L759.67,362.51 L752.00,360.32 L742.17,358.11 L732.67,356.94 L725.50,356.67 L719.83,357.05 L708.33,358.48 L700.17,360.63 L694.50,362.55 L689.33,364.72 L681.17,369.06 L664.33,379.51 L629.67,401.83 L583.67,432.17 L512.83,480.16 L482.83,500.03 L471.17,508.09 L465.50,512.43 L459.00,517.75 L457.33,519.83 L456.87,521.67 L457.05,523.33 L457.72,524.61 L459.00,525.67 L460.50,526.16 L462.50,526.33 L594.50,526.17 L628.67,526.50 L691.50,526.50 L693.83,526.78 L695.28,527.54 L696.28,528.83 L696.76,531.00 L696.83,546.67 L696.67,549.83 L696.50,629.17 L696.17,652.67 L696.17,688.67 L695.79,696.67 L695.51,698.33 L695.08,699.33 L693.96,700.72 L692.33,701.76 L690.50,702.28 L688.00,702.50 L644.17,702.50 L641.00,702.67 L506.00,703.00 L502.83,703.17 L380.33,703.17 L352.50,702.83 L270.83,702.50 L268.00,702.69 L266.00,703.11 L264.75,703.85 L263.95,704.84 L263.48,706.17 L263.33,707.83 L263.50,735.33 L263.17,794.67 L263.33,805.00 L263.17,811.00 L263.33,824.00 L263.17,871.33 L263.46,875.17 L264.13,876.74 L265.67,877.80 L268.50,878.17 L377.33,878.50 L380.50,878.67 L422.50,878.67 L425.67,878.50 L436.83,878.67 L503.17,878.17 L575.83,878.17 L614.67,877.83 L676.00,877.83 L710.17,877.50 L716.83,877.21 L734.17,875.32 L744.83,873.32 L759.83,869.06 L771.33,864.95 L784.00,859.11 L793.17,854.27 L803.50,847.89 L818.00,836.91 L823.17,832.33 L834.09,821.33 L842.48,811.00 L848.29,803.00 L855.36,791.50 L859.58,783.17 L864.62,772.00 L867.19,765.33 L869.43,758.83 L873.20,745.00 L874.23,738.67 L875.48,733.00 L876.22,725.33 L877.25,718.00 L877.67,711.33 L879.17,626.00 L879.00,581.33 L878.00,549.33 L877.67,524.33 L877.10,514.17 L875.50,499.33 L873.34,487.50 L871.25,479.17 L867.21,466.67 L863.54,457.17 L860.91,451.33 L857.08,443.83 L851.26,433.83ZM861.21,103.17 L856.82,94.50 L852.89,87.50 L845.28,75.50 L838.27,66.00 L831.85,58.00 L825.17,50.83 L817.50,43.40 L809.83,37.08 L800.33,30.09 L795.50,26.94 L787.83,22.32 L778.83,17.83 L772.83,15.27 L761.83,11.22 L748.17,7.50 L737.33,5.34 L729.17,4.61 L721.83,3.59 L713.17,3.17 L590.83,2.67 L568.17,2.33 L476.17,2.00 L473.00,1.83 L322.00,2.17 L240.83,2.83 L169.83,3.00 L159.33,3.45 L151.17,4.63 L143.67,5.39 L139.33,6.52 L134.50,7.36 L127.00,9.37 L115.33,13.30 L105.50,17.48 L98.33,20.96 L90.50,25.25 L80.00,31.75 L73.83,36.17 L64.00,43.88 L57.33,50.00 L52.50,54.83 L45.58,62.33 L42.66,65.83 L33.74,77.83 L25.94,90.33 L19.25,103.33 L15.55,111.83 L13.47,117.33 L9.32,130.67 L7.51,138.17 L5.33,149.50 L3.33,174.33 L2.83,213.83 L2.83,315.33 L3.17,352.50 L3.61,363.33 L5.58,381.83 L6.60,386.33 L7.49,392.00 L11.55,406.50 L13.47,412.17 L17.65,422.67 L24.01,435.67 L29.96,445.83 L38.25,457.67 L47.03,468.17 L53.18,474.83 L60.33,481.49 L70.67,490.21 L83.50,499.16 L94.33,505.51 L103.50,510.22 L112.50,514.13 L122.67,518.04 L136.17,521.91 L139.83,522.67 L144.67,523.18 L152.50,524.41 L158.33,524.59 L164.50,524.18 L177.17,522.19 L183.00,520.38 L188.50,518.28 L198.50,513.12 L209.00,506.48 L269.83,465.03 L310.50,438.00 L318.50,432.35 L335.17,421.50 L354.33,408.35 L359.50,405.08 L367.50,399.36 L378.83,391.84 L383.50,389.03 L411.50,370.40 L414.83,367.93 L419.33,364.09 L425.04,358.33 L428.50,354.33 L429.37,352.67 L429.24,351.40 L428.16,350.47 L426.17,350.17 L407.50,350.33 L360.00,351.50 L271.83,352.17 L196.17,353.33 L184.67,353.30 L183.33,353.04 L182.18,352.43 L181.24,351.48 L180.58,350.17 L180.33,345.67 L181.83,302.00 L182.00,255.67 L182.83,184.83 L183.23,182.17 L184.33,180.21 L186.00,178.89 L188.67,178.16 L196.00,177.67 L273.00,177.67 L355.67,177.17 L410.17,177.17 L413.33,177.00 L515.67,177.17 L595.67,177.83 L676.67,178.17 L704.67,178.83 L713.67,178.83 L720.33,179.11 L734.83,180.31 L753.17,184.54 L765.67,189.00 L775.83,193.65 L783.83,197.85 L794.00,204.00 L799.17,207.67 L811.33,217.17 L824.67,229.83 L838.17,244.17 L845.82,253.50 L852.81,261.33 L869.76,281.33 L874.00,285.51 L875.17,286.15 L876.09,286.11 L876.68,285.69 L877.15,284.83 L877.50,282.00 L877.50,270.83 L878.17,241.33 L879.50,211.00 L879.67,194.67 L879.23,178.50 L878.10,168.33 L877.35,158.50 L876.24,153.33 L875.41,147.17 L873.32,137.50 L869.47,124.00 L864.95,111.33Z"/></svg>
+        <span class="dive-hint" id="diveUnder">Role para entrar</span>
       </div>
       <div class="dive-frame" id="diveFrame">
         <nav class="dive-nav" id="diveNav" aria-label="Por dentro"><span>Modelos</span><span>Acabamentos</span><span>Tecidos</span><span>Tamanhos</span></nav>
@@ -1427,37 +1426,41 @@ const Studio = (() => {
     if (e.key === 'Tab'){ const f = $$('a,button', $('.menu-box', menu)); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0){ e.preventDefault(); f[f.length-1].focus(); } else if (!e.shiftKey && i === f.length-1){ e.preventDefault(); f[0].focus(); } } });
 
 
-  /* ====== POR DENTRO: câmera voa para dentro do símbolo ====== */
+  /* ====== POR DENTRO: câmera mergulha no S até a tela ficar branca ====== */
   (() => {
     const sec = $('#por-dentro'); if (!sec) return;
-    const pin = $('#divePin'), sym = $('#diveSym'), under = $('#diveUnder'), gold = $('#diveGold'), nav = $('#diveNav');
+    const pin = $('#divePin'), sym = $('#diveSym'), hint = $('#diveUnder'), white = $('#diveWhite'), nav = $('#diveNav');
     const pds = $$('.pd', sec), tabs = $$('span', nav);
-    const cl = x => Math.max(0, Math.min(1, x)), ezIn = u => u*u*u, ez = u => u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
+    const cl = x => Math.max(0, Math.min(1, x)), sm = u => u*u*(3-2*u), ez = u => u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
+    const TX = .5351, TY = .5880, ZMAX = 260, ROT = 9;   // ponto dentro da ponta branca do S
     $$('[data-fit]', sec).forEach(b => b.addEventListener('click', () => openFit(b.dataset.fit, b)));
     function frame(){
       const r = sec.getBoundingClientRect(), total = sec.offsetHeight - pin.offsetHeight;
       if (r.bottom < 0 || r.top > innerHeight) return;
       const p = cl((HEAD - r.top) / total);
-      const W = pin.clientWidth, H = pin.clientHeight, D = sym.offsetWidth || 400;
-      const zMax = Math.hypot(W, H) / (2 * .106 * D) * 1.25;
-      // entrar (0.04→0.22) e sair (0.80→0.96)
-      const zin = cl((p - .04) / .18), zout = cl((.96 - p) / .16), k = Math.min(zin, zout);
-      const z = 1 + (zMax - 1) * ezIn(k);
-      const tx = (W / 2 - (sym.offsetLeft + D * .872)) * ez(k), ty = (H / 2 - (sym.offsetTop + sym.offsetHeight * .853)) * ez(k);
-      sym.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${z.toFixed(3)})`;
-      under.style.opacity = cl(1 - k * 4).toFixed(3);
-      const g = cl((k - .78) / .2); gold.style.opacity = g.toFixed(3);
-      sym.style.opacity = k > .98 ? '0' : '1';
-      const inside = cl((Math.min(cl((p - .2) / .06), cl((.82 - p) / .06))));
+      const D = sym.clientWidth || 300, Hs = D * 881/882;
+      // entrar (0.03→0.27) e sair (0.78→0.97)
+      const k = Math.min(cl((p - .03) / .24), cl((.97 - p) / .19));
+      const z = Math.pow(ZMAX, sm(k) * sm(k));
+      const pull = ez(cl(k * 1.6));                // centraliza a ponta logo no começo
+      const ax = (TX - .5) * D, ay = (TY - .5) * Hs; // ponta em relação ao centro do S
+      const rot = ROT * sm(cl(k * 1.4));
+      // matriz: começa centralizado; a ponta vai para o centro da tela e tudo cresce em volta dela
+      const cx = -D/2 - ax * pull, cy = -Hs/2 - ay * pull;
+      sym.style.transform = `rotate(${rot.toFixed(2)}deg) scale(${z.toFixed(4)}) translate(${cx.toFixed(2)}px,${cy.toFixed(2)}px)`;
+      hint.style.opacity = cl(1 - k * 6).toFixed(3);
+      white.style.opacity = cl((k - .9) / .08).toFixed(3);
+      sym.style.visibility = k > .99 ? 'hidden' : 'visible';
+      const inside = Math.min(cl((p - .26) / .05), cl((.79 - p) / .05));
       nav.style.opacity = inside.toFixed(3);
-      const q = cl((p - .2) / .62) * 4; const act = Math.min(3, Math.floor(q));
+      const q = cl((p - .26) / .53) * 4; const act = Math.min(3, Math.floor(q));
       pds.forEach((el, i) => { const d = q - i - .5, vis = cl((.5 - Math.abs(d)) / .16) * inside;
         el.style.opacity = vis.toFixed(3); el.style.transform = `scale(${(1 + d * .16).toFixed(4)})`;
         el.classList.toggle('live', vis > .5); el.classList.toggle('on', vis > .55); });
       tabs.forEach((t, i) => t.classList.toggle('on', i === act));
     }
     let tk = 0; addEventListener('scroll', () => { if (!tk) tk = requestAnimationFrame(() => { tk = 0; frame(); }); }, {passive:true});
-    addEventListener('resize', frame); sym.addEventListener('load', frame); frame();
+    addEventListener('resize', frame); frame();
   })();
 
   /* ====== COMO FUNCIONA: cenas interativas ====== */
