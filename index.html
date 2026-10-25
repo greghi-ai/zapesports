@@ -866,8 +866,8 @@ const Studio = (() => {
   const flip = document.createElement('div'); flip.className = 'flip';
   const cv = document.createElement('canvas'); cv.width = W*K; cv.height = H*K; cv.setAttribute('role','img');
   flip.appendChild(cv); stage.prepend(flip);
-  const g = cv.getContext('2d');
-  let side = 'front', hl = null, raf = 0;
+  let g = cv.getContext('2d'); const G0 = g;
+  let side = 'front', hl = null, raf = 0, clipBody = true;
 
   /* ---------- utilidades ---------- */
   const rgb = hex => { const n = parseInt(hex.slice(1),16); return [n>>16, n>>8&255, n&255]; };
@@ -907,12 +907,12 @@ const Studio = (() => {
   const mr = rng(7);
   const marble = Array.from({length:240},()=>({x:150+mr()*300, y:mr(), rx:3+mr()*20, ry:.6+mr()*2.4, a:(mr()-.5)*1.2, o:.3+mr()*.6}));
   function detail(color, white){
-    g.save(); g.clip(BODY); g.fillStyle = color; g.strokeStyle = color;
+    g.save(); if (clipBody) g.clip(BODY); g.fillStyle = color; g.strokeStyle = color;
     switch(S.tpl){
       case 'sombra': if (sym.complete && sym.naturalWidth){ const s = side==='back'?300:300;
           g.translate(side==='back'?300:mx(330), side==='back'?318:304); g.rotate(side==='back'?0:-.08);
           g.drawImage(tint(sym, white?'#ffffff':color), -s/2, -s/2, s, s); } break;
-      case 'campnou': g.fillRect(mx(side==='back'?322:232)-(side==='back'?46:0),0,46,H); g.fillRect(mx(side==='back'?310:290)-(side==='back'?10:0),0,10,H); break;
+      case 'campnou': g.fillRect(mx(side==='back'?322:232)-(side==='back'?46:0),0,46,H*1.5); g.fillRect(mx(side==='back'?310:290)-(side==='back'?10:0),0,10,H*1.5); break;
       case 'santiago':
         for (let k=-3;k<=3;k++) g.fillRect(300+k*52-13, 150, 26, H);
         g.beginPath(); g.moveTo(0,0); g.lineTo(W,0); g.lineTo(W,128); for (let k=6;k>=0;k--){ g.lineTo(k*100+50,150); g.lineTo(k*100,128); } g.closePath(); g.fill(); break;
@@ -922,7 +922,7 @@ const Studio = (() => {
         g.lineWidth=4; g.beginPath(); g.moveTo(190,264); g.quadraticCurveTo(300,238,410,264); g.stroke(); break;
       case 'munique': g.fill(P('M170,212 L214,226 L214,640 L160,640 Z')); g.fill(P('M430,212 L386,226 L386,640 L440,640 Z')); break;
       case 'diagonal': g.beginPath(); g.moveTo(mx(140),30); g.lineTo(mx(226),30); g.lineTo(mx(476),660); g.lineTo(mx(390),660); g.closePath(); g.fill(); break;
-      case 'degrade': { const gr = g.createLinearGradient(0,220,0,476); gr.addColorStop(0, white?'rgba(255,255,255,0)':rgba(color,0)); gr.addColorStop(1, white?'#fff':color); g.fillStyle=gr; g.fillRect(0,0,W,H); } break;
+      case 'degrade': { const gr = g.createLinearGradient(0,220,0,476); gr.addColorStop(0, white?'rgba(255,255,255,0)':rgba(color,0)); gr.addColorStop(1, white?'#fff':color); g.fillStyle=gr; g.fillRect(0,0,W,H*1.5); } break;
     }
     g.restore();
   }
@@ -946,82 +946,71 @@ const Studio = (() => {
       }
       if (S.frontNum && S.num){ g.font=`900 96px ${F}`; const y = S.pos==='centro' ? 400 : 330; g.lineWidth=6; g.strokeText(S.num,300,y); g.fillText(S.num,300,y); }
     } else {
-      if (!numFill && sym.complete && sym.naturalWidth) g.drawImage(tint(sym, c.numero===c.principal ? c.detalhe : c.numero), 289, 84, 22, 22);
+      if (!numFill && sym.complete && sym.naturalWidth) g.drawImage(tint(sym, c.numero===c.principal ? c.detalhe : c.numero), 289, 100, 22, 22);
       if (S.nome){ g.font=`800 48px ${F}`; g.lineWidth=6; const t = S.nome.toUpperCase(); g.strokeText(t,300,186); g.fillText(t,300,186); }
       if (S.num){ g.font=`900 200px ${F}`; g.lineWidth=9; g.strokeText(S.num,300,384); g.fillText(S.num,300,384); }
     }
     g.restore();
   }
 
-  /* ---------- desenho ---------- */
+  /* ---------- desenho 3D: pinta sobre foto real de camiseta ---------- */
+  const MW = 648, MH = 834, SC = 1.6, TX = 325-300*SC, TY = 20-58*SC;
+  const SH3 = {}; ['front','back'].forEach(n => { const i = new Image(); i.onload = () => { SH3[n] = i; draw(); }; i.src = `assets/mock/${n}.png`; });
+  const mk = () => { const c = document.createElement('canvas'); c.width = MW; c.height = MH; return [c, c.getContext('2d')]; };
+  const [LC, L] = mk(), [HC, HX] = mk();
+  const SL = [[0,40],[178,40],[172,95],[154,200],[146,290],[140,372],[0,372]];
+  const SLV_M = new Path2D(); [SL, SL.map(([x,y])=>[644-x,y])].forEach(p => { SLV_M.moveTo(...p[0]); p.slice(1).forEach(q=>SLV_M.lineTo(...q)); SLV_M.closePath(); });
+  const BODY_M = new Path2D(); BODY_M.rect(0,0,MW,MH); BODY_M.addPath(SLV_M);
+  const CUFF_M = [[[8,322],[140,352]],[[504,352],[640,322]]];
+  const studio = cx => cx.setTransform(SC,0,0,SC,TX,TY);
+  function collar3d(cx, color, w){ cx.strokeStyle = color; cx.lineWidth = w; cx.lineCap = 'round'; cx.lineJoin = 'round'; cx.beginPath();
+    if (side==='back'){ for (let x=236; x<=408; x+=4){ const y = 60 + 42*((x-322)/230)**2; x===236 ? cx.moveTo(x,y) : cx.lineTo(x,y); } cx.stroke(); return; }
+    if (S.gola==='v'){ cx.ellipse(322,48,86,52,0,Math.PI,Math.PI*2); cx.stroke(); cx.beginPath(); cx.moveTo(240,58); cx.lineTo(322,152); cx.lineTo(404,58); cx.stroke(); }
+    else { cx.ellipse(322,48,86,52,0,0,Math.PI*2); cx.stroke(); } }
+  function cuffs3d(cx, color){ cx.save(); cx.clip(SLV_M); cx.strokeStyle = color; cx.lineWidth = 28; cx.lineCap = 'butt'; CUFF_M.forEach(([a,b])=>{ cx.beginPath(); cx.moveTo(...a); cx.lineTo(...b); cx.stroke(); }); cx.restore(); }
   function draw(){
-    raf = 0;
-    const c = S.c;
-    g.setTransform(K,0,0,K,0,0); g.clearRect(0,0,W,H);
-    // sombra no chão/parede
-    g.save(); g.shadowColor='rgba(0,0,0,.55)'; g.shadowBlur=36*K; g.shadowOffsetY=22*K; g.fillStyle=c.principal; g.fill(SIL); g.restore();
-    // cores base
-    SLV.forEach(s=>{ g.fillStyle=c.mangas; g.fill(s); });
-    g.fillStyle=c.principal; g.fill(BODY);
-    if (S.tpl==='munique'){ g.save(); g.clip(BODY); g.fillStyle=shade(c.principal,-.16); for(let y=60;y<H;y+=11) for(let x=150+((y/11)%2)*6;x<460;x+=12){ g.beginPath(); g.moveTo(x,y+8); g.lineTo(x+4,y+1); g.lineTo(x+8,y+8); g.fill(); } g.restore(); }
+    raf = 0; const c = S.c, sh = SH3[side==='back'?'back':'front'];
+    G0.setTransform(1,0,0,1,0,0); G0.clearRect(0,0,cv.width,cv.height);
+    if (!sh) return;
+    // 1. pintura em cima da foto
+    L.setTransform(1,0,0,1,0,0); L.globalCompositeOperation = 'source-over'; L.globalAlpha = 1; L.clearRect(0,0,MW,MH);
+    L.fillStyle = c.principal; L.fillRect(0,0,MW,MH);
+    g = L; clipBody = false;
+    studio(L);
+    if (S.tpl==='munique'){ L.fillStyle=shade(c.principal,-.16); for(let y=40;y<H*1.5;y+=11) for(let x=80+((y/11)%2)*6;x<520;x+=12){ L.beginPath(); L.moveTo(x,y+8); L.lineTo(x+4,y+1); L.lineTo(x+8,y+8); L.fill(); } }
     if (S.tpl!=='lisa') detail(c.detalhe);
-    CUFF.forEach(s=>{ g.fillStyle=c.punhos; g.fill(s); });
-    prints();
-    // gola
-    g.save(); g.lineCap='round'; g.lineJoin='miter';
-    if (side==='front'){
-      const inner = S.gola==='v' ? P('M236,58 Q300,40 364,58 L300,140 Z') : P('M238,58 Q300,40 362,58 Q300,108 238,58 Z');
-      g.fillStyle=shade(c.principal,-.6); g.fill(inner);
-      g.save(); g.clip(inner); const ig = g.createLinearGradient(0,44,0,140); ig.addColorStop(0,'rgba(0,0,0,.1)'); ig.addColorStop(1,'rgba(0,0,0,.55)'); g.fillStyle=ig; g.fillRect(200,30,200,120);
-        g.fillStyle='rgba(255,255,255,.75)'; g.fillRect(288,58,24,13); g.fillStyle='rgba(0,0,0,.6)'; g.font='700 7px Barlow, sans-serif'; g.textAlign='center'; g.fillText('ZAPE',300,67); g.restore();
-      g.strokeStyle=shade(c.gola,-.25); g.lineWidth=9; g.stroke(COLLAR_BACK_IN);
-      g.strokeStyle=c.gola; g.lineWidth=15; g.stroke(collarFront());
-    } else { g.strokeStyle=c.gola; g.lineWidth=14; g.stroke(COLLAR_BACK); }
-    g.restore();
-    // tecido
-    g.save(); g.clip(SIL);
-    if (S.tecido!=='liso'){ g.fillStyle = g.createPattern(S.tecido==='colmeia'?T_COLMEIA:T_3D,'repeat'); g.fillRect(0,0,W,H); }
-    g.fillStyle = g.createPattern(T_NOISE,'repeat'); g.fillRect(0,0,W,H);
-    // sombras (multiply)
-    g.globalCompositeOperation='multiply';
-    let gr = g.createLinearGradient(170,0,430,0); gr.addColorStop(0,'rgba(0,0,0,.42)'); gr.addColorStop(.16,'rgba(0,0,0,.08)'); gr.addColorStop(.5,'rgba(0,0,0,0)'); gr.addColorStop(.84,'rgba(0,0,0,.1)'); gr.addColorStop(1,'rgba(0,0,0,.48)');
-    g.fillStyle=gr; g.fill(BODY);
-    gr = g.createLinearGradient(0,60,0,476); gr.addColorStop(0,'rgba(0,0,0,0)'); gr.addColorStop(.7,'rgba(0,0,0,.06)'); gr.addColorStop(1,'rgba(0,0,0,.28)'); g.fillStyle=gr; g.fill(BODY);
-    [[[110,120],[150,240]],[[490,120],[450,240]]].forEach(([a,b],i)=>{ const sg = g.createLinearGradient(a[0],a[1],b[0],b[1]); sg.addColorStop(0,'rgba(0,0,0,0)'); sg.addColorStop(1,'rgba(0,0,0,.38)'); g.fillStyle=sg; g.fill(SLV[i]); });
-    g.restore();
-    // dobras suaves
-    g.save(); g.clip(SIL);
-    const folds = [['M180,228 Q212,268 232,320',14,.42,18],['M420,228 Q388,268 368,320',14,.42,18],['M200,432 Q250,446 290,432',10,.22,14],['M330,446 Q372,432 408,440',10,.22,14],['M194,300 Q204,340 198,380',12,.2,16],['M406,296 Q396,340 404,386',12,.2,16],
-      ['M124,150 Q138,190 150,232',10,.32,12],['M476,150 Q462,190 450,232',10,.32,12],['M232,62 Q300,98 368,62',8,.3,10]];
-    folds.forEach(([d,w,a,b])=>soft(P(d), w, `rgba(0,0,0,${a})`, b));
-    ARM.forEach(p=>soft(p, 3, 'rgba(0,0,0,.6)', 5));
-    // brilhos (screen)
-    g.globalCompositeOperation='screen';
-    const lift = lum(c.principal) < .25 ? .16 : .1;
-    let rg = g.createRadialGradient(290,230,10,290,230,210); rg.addColorStop(0,`rgba(255,255,255,${lift})`); rg.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=rg; g.fillRect(0,0,W,H);
-    [[206,104],[394,104]].forEach(([x,y])=>{ const q=g.createRadialGradient(x,y,4,x,y,70); q.addColorStop(0,`rgba(255,255,255,${lift*.9})`); q.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=q; g.fillRect(0,0,W,H); });
-    [['M216,270 Q232,320 226,380',.10],['M372,270 Q356,326 366,384',.08]].forEach(([d,a])=>soft(P(d), 10, `rgba(255,255,255,${a*(lift/.1)})`, 16));
-    g.restore();
-    // costuras
-    g.save(); g.setLineDash([3,3]); g.lineWidth=1;
-    const st = lum(c.principal) > .55 ? 'rgba(0,0,0,.28)' : 'rgba(255,255,255,.16)';
-    [...ARM, ...CUFFSEAM, HEM].forEach(p=>{ g.strokeStyle=st; g.save(); g.translate(1.5,1.5); g.stroke(p); g.restore(); });
-    g.restore();
-    // contorno
-    g.save(); g.strokeStyle='rgba(0,0,0,.45)'; g.lineWidth=1.2; g.stroke(SIL); g.restore();
-    // destaque piscando
+    L.setTransform(1,0,0,1,0,0);
+    L.save(); L.clip(SLV_M); L.fillStyle = c.mangas; L.fillRect(0,0,MW,MH); L.restore();
+    cuffs3d(L, c.punhos);
+    studio(L); prints(); L.setTransform(1,0,0,1,0,0);
+    collar3d(L, c.gola, side==='back' ? 20 : 26);
+    // 2. tecido
+    if (S.tecido!=='liso'){ L.save(); L.scale(1.8,1.8); L.fillStyle = L.createPattern(S.tecido==='colmeia'?T_COLMEIA:T_3D,'repeat'); L.fillRect(0,0,MW,MH); L.restore(); }
+    L.fillStyle = L.createPattern(T_NOISE,'repeat'); L.fillRect(0,0,MW,MH);
+    // 3. luz e sombra da foto + recorte da silhueta
+    L.globalCompositeOperation = 'multiply'; L.drawImage(sh,0,0);
+    L.globalCompositeOperation = 'destination-in'; L.drawImage(sh,0,0);
+    L.globalCompositeOperation = 'screen'; L.globalAlpha = lum(c.principal) < .3 ? .2 : .06; L.drawImage(sh,0,0);
+    L.globalAlpha = 1; L.globalCompositeOperation = 'destination-in'; L.drawImage(sh,0,0);
+    L.globalCompositeOperation = 'source-over';
+    // 4. destaque piscando da parte escolhida
     if (hl && hl.a>0){
-      const wa = `rgba(255,255,255,${hl.a})`;
-      g.save(); g.fillStyle=wa; g.strokeStyle=wa;
-      if (hl.zone==='principal'){ g.fill(BODY); }
-      if (hl.zone==='detalhe'){ g.globalAlpha=hl.a/.45; detail('#ffffff', true); }
-      if (hl.zone==='mangas') SLV.forEach(s=>g.fill(s));
-      if (hl.zone==='punhos') CUFF.forEach(s=>g.fill(s));
-      if (hl.zone==='gola'){ g.lineWidth=16; g.lineCap='round'; g.stroke(side==='front'?collarFront():COLLAR_BACK); }
-      if (hl.zone==='numero'){ g.globalAlpha=hl.a/.45; prints('#ffffff'); }
-      if (hl.zone==='escudo' && side==='front'){ const b=crestBox(); g.fillRect(b.cx-b.h*.66,b.cy-b.h*.6,b.h*1.32,b.h*1.2); }
-      g.restore();
+      HX.setTransform(1,0,0,1,0,0); HX.globalCompositeOperation='source-over'; HX.globalAlpha=1; HX.clearRect(0,0,MW,MH);
+      const wa = '#ffffff'; HX.fillStyle = wa; g = HX;
+      if (hl.zone==='principal') HX.fill(BODY_M, 'evenodd');
+      if (hl.zone==='detalhe'){ studio(HX); detail(wa, true); HX.setTransform(1,0,0,1,0,0); HX.globalCompositeOperation='destination-out'; HX.fill(SLV_M); HX.globalCompositeOperation='source-over'; }
+      if (hl.zone==='mangas') HX.fill(SLV_M);
+      if (hl.zone==='punhos') cuffs3d(HX, wa);
+      if (hl.zone==='gola') collar3d(HX, wa, 30);
+      if (hl.zone==='numero'){ studio(HX); prints(wa); }
+      if (hl.zone==='escudo' && side==='front'){ studio(HX); const b=crestBox(); HX.fillRect(b.cx-b.h*.66,b.cy-b.h*.6,b.h*1.32,b.h*1.2); }
+      HX.setTransform(1,0,0,1,0,0); HX.globalCompositeOperation='destination-in'; HX.drawImage(sh,0,0);
+      L.globalAlpha = hl.a; L.drawImage(HC,0,0); L.globalAlpha = 1;
     }
+    g = G0; clipBody = true;
+    // 5. coloca na tela com sombra
+    const s = cv.height*0.95/MH, w = MW*s, x = (cv.width-w)/2, y = cv.height*0.025;
+    G0.save(); G0.shadowColor='rgba(0,0,0,.6)'; G0.shadowBlur=40*K; G0.shadowOffsetY=24*K; G0.drawImage(LC, x, y, w, MH*s); G0.restore();
     cv.setAttribute('aria-label', `Camisa personalizada, ${side==='front'?'frente':'costas'}`);
   }
   const redraw = () => { if (!raf) raf = requestAnimationFrame(draw); };
