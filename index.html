@@ -421,9 +421,17 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
   .how-steps b{font-size:15px}
   .how-stage{height:min(118vw,540px)}
 }
-@media (prefers-reduced-motion:reduce){.js [data-rv],.js .split .w>span,.js .rack .piece{opacity:1!important;transform:none!important}}
+@media (prefers-reduced-motion:reduce){
+  .js [data-rv],.js .rack .piece{transform:none!important}
+  .js .split .w>span{transform:none!important;opacity:0;transition:opacity .7s ease;transition-delay:calc(var(--i)*90ms)}
+  .js .split.in .w>span{opacity:1}
+  .menu-box{animation:fade .35s ease!important}
+  .menu-grid a{transform:none!important;animation:rise .5s ease forwards!important;animation-delay:calc(var(--k)*70ms + 100ms)!important}
+  .scene,.scene.on{transform:none!important}
+  .face{transition:none!important}
+}
 
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
 </style>
 
 <header class="top">
@@ -1305,7 +1313,7 @@ const Studio = (() => {
   // cards do catálogo (criados depois)
   const grid = $('#grid'); if (grid){ const tag = () => $$('#grid > *').forEach((el,k) => { if (el.dataset.rv !== undefined) return; el.dataset.rv=''; el.style.setProperty('--d', (k%4*90)+'ms'); io.observe(el); });
     tag(); new MutationObserver(tag).observe(grid, {childList:true}); }
-  function count(dt){ if (!dt || RM) return; const n = parseInt(dt.textContent); if (isNaN(n) || dt.textContent.trim() !== String(n)) return;
+  function count(dt){ if (!dt) return; const n = parseInt(dt.textContent); if (isNaN(n) || dt.textContent.trim() !== String(n)) return;
     const t0 = performance.now(); (function f(t){ const u = Math.min(1,(t-t0)/900); dt.textContent = Math.round(n*(1-Math.pow(1-u,3))); if (u<1) requestAnimationFrame(f); })(t0); }
   // arara: peças caem na arara ao abrir
   const rack = $('#rack'); if (rack){ $$('.piece', rack).forEach((p,k) => p.style.transitionDelay = (200 + k*80)+'ms');
@@ -1315,7 +1323,6 @@ const Studio = (() => {
   const fader = $('#fader');
   function go(hash){ const t = hash === '#top' ? null : document.getElementById(hash.slice(1)); if (hash !== '#top' && !t) return;
     const jump = () => { const y = t ? t.getBoundingClientRect().top + scrollY - (t.id === 'arara' ? HEAD : HEAD - 1) : 0; scrollTo({top: Math.max(0, y), behavior:'instant'}); history.replaceState(null, '', hash); };
-    if (RM){ closeMenu(); jump(); return; }
     fader.classList.add('on');
     setTimeout(() => { closeMenu(true); jump(); setTimeout(() => fader.classList.remove('on'), 120); }, 400); }
   document.addEventListener('click', e => { const a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href').length < 2) return; e.preventDefault(); go(a.getAttribute('href')); });
