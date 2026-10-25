@@ -343,52 +343,54 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 .js .rack.in .piece.out{opacity:0}
 
 
-/* ---------- por dentro (câmera entra no quadro) ---------- */
-.dive{position:relative;height:520vh}
-.dive-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);overflow:hidden}
-.dive-out{position:absolute;left:0;right:0;bottom:clamp(18px,5vh,48px);display:flex;flex-direction:column;align-items:center;gap:6px;transition:opacity .3s}
+/* ---------- por dentro (câmera voa para dentro do símbolo) ---------- */
+.dive{position:relative;height:480vh;border-top:1px solid var(--line)}
+.dive-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);overflow:hidden;background:radial-gradient(60% 55% at 50% 42%,rgba(218,165,32,.14),transparent 70%),var(--ink)}
+.dive-gold{position:absolute;inset:0;background:var(--gold);opacity:0}
+.dive-logo{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,28px)}
+.dive-sym{width:min(56vh,62vw);height:auto;display:block;transform-origin:87.2% 85.3%;will-change:transform;filter:drop-shadow(0 20px 40px rgba(0,0,0,.45))}
+.dive-under{display:flex;flex-direction:column;align-items:center;gap:12px}
+.dive-under img{width:clamp(150px,18vw,220px);height:auto}
 .dive-hint{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
-.dive-hint::after{content:"";display:block;width:1px;height:28px;margin:10px auto 0;background:linear-gradient(var(--gold),transparent);animation:drip 1.8s ease-in-out infinite}
+.dive-hint::after{content:"";display:block;width:1px;height:26px;margin:10px auto 0;background:linear-gradient(var(--gold),transparent);animation:drip 1.8s ease-in-out infinite}
 @keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-.dive-frame{position:absolute;inset:0;overflow:hidden;background:#0d0c0b;will-change:clip-path}
-.dive-bg{position:absolute;inset:-4%;background:url("assets/info/quadro.jpg") 50% 30%/cover;will-change:transform}
-.dive-shade{position:absolute;inset:0;background:radial-gradient(90% 80% at 50% 45%,rgba(12,11,10,.84),rgba(12,11,10,.97));opacity:.2}
-.dive-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 16px 8%;text-align:center;gap:6px}
-.dive-cover b{font-family:var(--f-display);font-weight:900;font-size:clamp(22px,2.6vw,34px);line-height:.95;text-transform:uppercase;max-width:14ch}
-.dive-nav{position:absolute;top:clamp(14px,3vh,28px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:24px;background:rgba(12,11,10,.7);border:1px solid var(--line);opacity:0}
-.dive-nav span{padding:7px 14px;border-radius:18px;font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:background .5s,color .5s;white-space:nowrap}
-.dive-nav span.on{background:var(--paper);color:var(--ink)}
+.dive-frame{position:absolute;inset:0;color:#140f02;pointer-events:none}
+.dive-nav{position:absolute;top:clamp(14px,3vh,28px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:24px;background:rgba(20,15,2,.1);border:1px solid rgba(20,15,2,.18);opacity:0}
+.dive-nav span{padding:7px 14px;border-radius:18px;font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,15,2,.6);transition:background .5s,color .5s;white-space:nowrap}
+.dive-nav span.on{background:#140f02;color:var(--gold)}
 .pd{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(70px,10vh,110px) max(16px,calc((100% - 1240px)/2 + 16px)) clamp(24px,6vh,60px);opacity:0;pointer-events:none;will-change:transform,opacity}
 .pd.live{pointer-events:auto}
+.pd .eyebrow{color:#140f02;opacity:.7}
 .pd-head{display:flex;flex-direction:column;gap:14px}
-.pd-num{font-family:var(--f-display);font-weight:900;font-size:clamp(110px,15vw,220px);line-height:.8;color:var(--gold)}
+.pd-num{font-family:var(--f-display);font-weight:900;font-size:clamp(110px,15vw,220px);line-height:.8;color:#140f02}
 .pd-num.sm{font-size:clamp(76px,9vw,150px);white-space:nowrap}
-.pd-head h3{font-size:clamp(34px,4.4vw,64px);margin-top:8px}
-.pd-head p{color:#d6d1c6;font-size:17px;max-width:40ch;margin-top:10px}
+.pd-head h3{font-size:clamp(34px,4.4vw,64px);margin-top:8px;color:#140f02}
+.pd-head p{color:rgba(20,15,2,.78);font-size:17px;max-width:40ch;margin-top:10px}
 .pd-models{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.pd-m{position:relative;padding:0;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#d9d7d2;cursor:pointer;aspect-ratio:3/4;text-align:left}
+.pd-m{position:relative;padding:0;border:0;border-radius:3px;overflow:hidden;background:#d9d7d2;cursor:pointer;aspect-ratio:3/4;text-align:left;box-shadow:0 10px 24px rgba(60,40,0,.25);transition:transform .4s cubic-bezier(.22,.8,.26,1)}
 .pd-m img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;transition:transform .6s cubic-bezier(.22,.8,.26,1)}
 .pd-m span{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(10,9,8,.9));font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper)}
-.pd-m:hover{border-color:var(--gold)}.pd-m:hover img{transform:scale(1.06)}
+.pd-m:hover{transform:translateY(-4px)}.pd-m:hover img{transform:scale(1.06)}
 .pd-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .pd-c{display:flex;flex-direction:column;gap:6px}
-.pd-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;border:1px solid var(--line);display:block}
+.pd-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;display:block;box-shadow:0 10px 24px rgba(60,40,0,.25)}
 .pd-c b{font-family:var(--f-label);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
-.pd-c span{font-size:14px;color:var(--muted)}
+.pd-c span{font-size:14px;color:rgba(20,15,2,.72)}
 .pd-sizes{display:flex;flex-direction:column;gap:16px}
-.sz-row{display:flex;flex-direction:column;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.sz-l{font-family:var(--f-label);font-weight:600;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.sz-row{display:flex;flex-direction:column;gap:8px;padding-bottom:14px;border-bottom:1px solid rgba(20,15,2,.18)}
+.sz-l{font-family:var(--f-label);font-weight:700;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:rgba(20,15,2,.65)}
 .sz{display:flex;flex-wrap:wrap;gap:8px}
-.sz i{font-style:normal;min-width:64px;height:64px;padding:0 14px;display:grid;place-items:center;border:1px solid var(--line);border-radius:3px;font-family:var(--f-display);font-weight:900;font-size:30px}
-.sz-row.plus i{border-color:var(--gold);color:var(--gold);font-size:22px}
+.sz i{font-style:normal;min-width:64px;height:64px;padding:0 14px;display:grid;place-items:center;border:2px solid #140f02;border-radius:3px;font-family:var(--f-display);font-weight:900;font-size:30px}
+.sz-row.plus i{background:#140f02;color:var(--gold);font-size:22px}
 .pd-models>*,.pd-cards>*,.pd-sizes>*{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform 1s cubic-bezier(.22,.8,.26,1);transition-delay:calc(var(--j)*70ms)}
 .pd.on .pd-models>*,.pd.on .pd-cards>*,.pd.on .pd-sizes>*{opacity:1;transform:none}
+.pd.on .pd-m:hover{transform:translateY(-4px)}
 @media (max-width:900px){
   .pd{grid-template-columns:1fr;align-content:center;gap:18px;padding-top:64px}
   .pd-num{font-size:clamp(72px,22vw,120px)}
   .pd-head{flex-direction:row;align-items:flex-end;gap:14px}
   .pd-head h3{font-size:30px;margin-top:4px}.pd-head p{font-size:15px;margin-top:6px}
-  .pd-models{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .pd-models{gap:6px}
   .pd-m span{font-size:10px;padding:16px 5px 5px;letter-spacing:.04em}
   .pd-cards{gap:8px}.pd-c b{font-size:14px}.pd-c span{font-size:12px}
   .sz i{min-width:42px;height:42px;font-size:19px;padding:0 10px}
@@ -534,11 +536,12 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 
   <section class="dive" id="por-dentro" aria-label="Por dentro da ZAPE">
     <div class="dive-pin" id="divePin">
-      <div class="dive-out" aria-hidden="true"><span class="eyebrow">Por dentro da ZAPE</span><span class="dive-hint">Role para entrar</span></div>
+      <div class="dive-gold" id="diveGold"></div>
+      <div class="dive-logo" id="diveLogo">
+        <img class="dive-sym" id="diveSym" src="assets/info/sym_gold.png" alt="">
+        <div class="dive-under" id="diveUnder"><img src="assets/logo.png" alt="ZAPE Sport Wear"><span class="dive-hint">Role para entrar</span></div>
+      </div>
       <div class="dive-frame" id="diveFrame">
-        <div class="dive-bg" id="diveBg"></div>
-        <div class="dive-shade" id="diveShade"></div>
-        <div class="dive-cover" id="diveCover"><span class="eyebrow">Catálogo 2026</span><b>O que vai no seu uniforme</b></div>
         <nav class="dive-nav" id="diveNav" aria-label="Por dentro"><span>Modelos</span><span>Acabamentos</span><span>Tecidos</span><span>Tamanhos</span></nav>
         <div class="pd" data-k="0">
           <div class="pd-head"><b class="pd-num">8</b><div><span class="eyebrow">01 · Modelos</span><h3>Modelos no catálogo 2026</h3><p>Futebol, basquete, feminino e short. Todos sob encomenda, nas cores do seu time. Toque num modelo para ver os detalhes.</p></div></div>
@@ -1424,35 +1427,37 @@ const Studio = (() => {
     if (e.key === 'Tab'){ const f = $$('a,button', $('.menu-box', menu)); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0){ e.preventDefault(); f[f.length-1].focus(); } else if (!e.shiftKey && i === f.length-1){ e.preventDefault(); f[0].focus(); } } });
 
 
-  /* ====== POR DENTRO: câmera entra no quadro ====== */
+  /* ====== POR DENTRO: câmera voa para dentro do símbolo ====== */
   (() => {
     const sec = $('#por-dentro'); if (!sec) return;
-    const pin = $('#divePin'), fr = $('#diveFrame'), bg = $('#diveBg'), sh = $('#diveShade'), cov = $('#diveCover'), nav = $('#diveNav'), out = $('.dive-out', sec);
+    const pin = $('#divePin'), sym = $('#diveSym'), under = $('#diveUnder'), gold = $('#diveGold'), nav = $('#diveNav');
     const pds = $$('.pd', sec), tabs = $$('span', nav);
-    const cl = x => Math.max(0, Math.min(1, x)), ez = u => u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
+    const cl = x => Math.max(0, Math.min(1, x)), ezIn = u => u*u*u, ez = u => u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
     $$('[data-fit]', sec).forEach(b => b.addEventListener('click', () => openFit(b.dataset.fit, b)));
     function frame(){
       const r = sec.getBoundingClientRect(), total = sec.offsetHeight - pin.offsetHeight;
       if (r.bottom < 0 || r.top > innerHeight) return;
       const p = cl((HEAD - r.top) / total);
-      const enter = ez(cl(p / .17)), exit = ez(cl((p - .84) / .16)), open = enter * (1 - exit);
-      const W = pin.clientWidth, H = pin.clientHeight, s0 = Math.min(W * .42, H * .62, 420);
-      const ix = (W - s0) / 2 * (1 - open), iy = (H - s0) / 2 * (1 - open) - (1 - open) * H * .04;
-      fr.style.clipPath = `inset(${Math.max(0,iy).toFixed(1)}px ${ix.toFixed(1)}px ${Math.max(0,(H - s0)/2*(1-open) + (1-open)*H*.04).toFixed(1)}px ${ix.toFixed(1)}px round ${(6*(1-open)).toFixed(1)}px)`;
-      bg.style.transform = `scale(${(1.35 - .25 * open).toFixed(3)})`;
-      sh.style.opacity = (.15 + .85 * open).toFixed(3);
-      cov.style.opacity = cl(1 - open * 2.4).toFixed(3);
-      out.style.opacity = cl(1 - open * 3).toFixed(3);
-      const inside = cl((open - .55) / .35);
+      const W = pin.clientWidth, H = pin.clientHeight, D = sym.offsetWidth || 400;
+      const zMax = Math.hypot(W, H) / (2 * .106 * D) * 1.25;
+      // entrar (0.04→0.22) e sair (0.80→0.96)
+      const zin = cl((p - .04) / .18), zout = cl((.96 - p) / .16), k = Math.min(zin, zout);
+      const z = 1 + (zMax - 1) * ezIn(k);
+      const tx = (W / 2 - (sym.offsetLeft + D * .872)) * ez(k), ty = (H / 2 - (sym.offsetTop + sym.offsetHeight * .853)) * ez(k);
+      sym.style.transform = `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${z.toFixed(3)})`;
+      under.style.opacity = cl(1 - k * 4).toFixed(3);
+      const g = cl((k - .78) / .2); gold.style.opacity = g.toFixed(3);
+      sym.style.opacity = k > .98 ? '0' : '1';
+      const inside = cl((Math.min(cl((p - .2) / .06), cl((.82 - p) / .06))));
       nav.style.opacity = inside.toFixed(3);
-      const q = cl((p - .15) / .68) * 4; let act = Math.min(3, Math.floor(q));
-      pds.forEach((el, k) => { const d = q - k - .5, vis = cl((.5 - Math.abs(d)) / .16) * inside;
+      const q = cl((p - .2) / .62) * 4; const act = Math.min(3, Math.floor(q));
+      pds.forEach((el, i) => { const d = q - i - .5, vis = cl((.5 - Math.abs(d)) / .16) * inside;
         el.style.opacity = vis.toFixed(3); el.style.transform = `scale(${(1 + d * .16).toFixed(4)})`;
         el.classList.toggle('live', vis > .5); el.classList.toggle('on', vis > .55); });
-      tabs.forEach((t, k) => t.classList.toggle('on', k === act));
+      tabs.forEach((t, i) => t.classList.toggle('on', i === act));
     }
     let tk = 0; addEventListener('scroll', () => { if (!tk) tk = requestAnimationFrame(() => { tk = 0; frame(); }); }, {passive:true});
-    addEventListener('resize', frame); frame();
+    addEventListener('resize', frame); sym.addEventListener('load', frame); frame();
   })();
 
   /* ====== COMO FUNCIONA: cenas interativas ====== */
