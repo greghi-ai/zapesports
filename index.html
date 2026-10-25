@@ -342,6 +342,61 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 .js .rack.in .piece{opacity:1;transform:none}
 .js .rack.in .piece.out{opacity:0}
 
+
+/* ---------- por dentro (câmera entra no quadro) ---------- */
+.dive{position:relative;height:520vh}
+.dive-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);overflow:hidden}
+.dive-out{position:absolute;left:0;right:0;bottom:clamp(18px,5vh,48px);display:flex;flex-direction:column;align-items:center;gap:6px;transition:opacity .3s}
+.dive-hint{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.dive-hint::after{content:"";display:block;width:1px;height:28px;margin:10px auto 0;background:linear-gradient(var(--gold),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.dive-frame{position:absolute;inset:0;overflow:hidden;background:#0d0c0b;will-change:clip-path}
+.dive-bg{position:absolute;inset:-4%;background:url("assets/info/quadro.jpg") 50% 30%/cover;will-change:transform}
+.dive-shade{position:absolute;inset:0;background:radial-gradient(90% 80% at 50% 45%,rgba(12,11,10,.84),rgba(12,11,10,.97));opacity:.2}
+.dive-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:0 16px 8%;text-align:center;gap:6px}
+.dive-cover b{font-family:var(--f-display);font-weight:900;font-size:clamp(22px,2.6vw,34px);line-height:.95;text-transform:uppercase;max-width:14ch}
+.dive-nav{position:absolute;top:clamp(14px,3vh,28px);left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:4px;border-radius:24px;background:rgba(12,11,10,.7);border:1px solid var(--line);opacity:0}
+.dive-nav span{padding:7px 14px;border-radius:18px;font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);transition:background .5s,color .5s;white-space:nowrap}
+.dive-nav span.on{background:var(--paper);color:var(--ink)}
+.pd{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,5vw,72px);align-items:center;padding:clamp(70px,10vh,110px) max(16px,calc((100% - 1240px)/2 + 16px)) clamp(24px,6vh,60px);opacity:0;pointer-events:none;will-change:transform,opacity}
+.pd.live{pointer-events:auto}
+.pd-head{display:flex;flex-direction:column;gap:14px}
+.pd-num{font-family:var(--f-display);font-weight:900;font-size:clamp(110px,15vw,220px);line-height:.8;color:var(--gold)}
+.pd-num.sm{font-size:clamp(76px,9vw,150px);white-space:nowrap}
+.pd-head h3{font-size:clamp(34px,4.4vw,64px);margin-top:8px}
+.pd-head p{color:#d6d1c6;font-size:17px;max-width:40ch;margin-top:10px}
+.pd-models{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pd-m{position:relative;padding:0;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:#d9d7d2;cursor:pointer;aspect-ratio:3/4;text-align:left}
+.pd-m img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;transition:transform .6s cubic-bezier(.22,.8,.26,1)}
+.pd-m span{position:absolute;left:0;right:0;bottom:0;padding:22px 10px 8px;background:linear-gradient(transparent,rgba(10,9,8,.9));font-family:var(--f-label);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--paper)}
+.pd-m:hover{border-color:var(--gold)}.pd-m:hover img{transform:scale(1.06)}
+.pd-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pd-c{display:flex;flex-direction:column;gap:6px}
+.pd-c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:3px;border:1px solid var(--line);display:block}
+.pd-c b{font-family:var(--f-label);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.pd-c span{font-size:14px;color:var(--muted)}
+.pd-sizes{display:flex;flex-direction:column;gap:16px}
+.sz-row{display:flex;flex-direction:column;gap:8px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.sz-l{font-family:var(--f-label);font-weight:600;font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.sz{display:flex;flex-wrap:wrap;gap:8px}
+.sz i{font-style:normal;min-width:64px;height:64px;padding:0 14px;display:grid;place-items:center;border:1px solid var(--line);border-radius:3px;font-family:var(--f-display);font-weight:900;font-size:30px}
+.sz-row.plus i{border-color:var(--gold);color:var(--gold);font-size:22px}
+.pd-models>*,.pd-cards>*,.pd-sizes>*{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform 1s cubic-bezier(.22,.8,.26,1);transition-delay:calc(var(--j)*70ms)}
+.pd.on .pd-models>*,.pd.on .pd-cards>*,.pd.on .pd-sizes>*{opacity:1;transform:none}
+@media (max-width:900px){
+  .pd{grid-template-columns:1fr;align-content:center;gap:18px;padding-top:64px}
+  .pd-num{font-size:clamp(72px,22vw,120px)}
+  .pd-head{flex-direction:row;align-items:flex-end;gap:14px}
+  .pd-head h3{font-size:30px;margin-top:4px}.pd-head p{font-size:15px;margin-top:6px}
+  .pd-models{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .pd-m span{font-size:10px;padding:16px 5px 5px;letter-spacing:.04em}
+  .pd-cards{gap:8px}.pd-c b{font-size:14px}.pd-c span{font-size:12px}
+  .sz i{min-width:42px;height:42px;font-size:19px;padding:0 10px}
+  .pd-sizes{gap:8px}.sz-row{padding-bottom:8px;gap:5px}.pd-num.sm{font-size:56px}
+  .dive-nav span{padding:6px 9px;font-size:11px;letter-spacing:.08em}
+}
+@media (max-width:520px){.pd-head{flex-direction:column;align-items:flex-start;gap:6px}.pd-num{font-size:72px}.pd-c span{display:none}}
+
 /* ---------- como funciona interativo ---------- */
 .how{position:relative;height:300vh;border-top:1px solid var(--line)}
 .how-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);display:flex;align-items:center;overflow:hidden}
@@ -469,15 +524,50 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
       <h1>Vista o <em>seu</em> time.</h1>
       <div class="side">
         <p>Uniformes sob encomenda para futebol, várzea, basquete e eventos. Escolha o modelo na arara, monte a camisa com as cores e o escudo do seu time e mande o pedido pelo WhatsApp.</p>
-        <dl class="facts">
-          <div><dt>8</dt><dd>modelos no catálogo 2026</dd></div>
-          <div><dt>3</dt><dd>acabamentos de escudo</dd></div>
-          <div><dt>3</dt><dd>tecidos Dry Fit</dd></div>
-          <div><dt>Inf.–GG</dt><dd>plus size sob consulta</dd></div>
-        </dl>
         <div class="ctas">
           <a class="btn btn-gold" href="#monte">Montar minha camisa</a>
           <a class="btn" href="#modelos">Ver modelos</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dive" id="por-dentro" aria-label="Por dentro da ZAPE">
+    <div class="dive-pin" id="divePin">
+      <div class="dive-out" aria-hidden="true"><span class="eyebrow">Por dentro da ZAPE</span><span class="dive-hint">Role para entrar</span></div>
+      <div class="dive-frame" id="diveFrame">
+        <div class="dive-bg" id="diveBg"></div>
+        <div class="dive-shade" id="diveShade"></div>
+        <div class="dive-cover" id="diveCover"><span class="eyebrow">Catálogo 2026</span><b>O que vai no seu uniforme</b></div>
+        <nav class="dive-nav" id="diveNav" aria-label="Por dentro"><span>Modelos</span><span>Acabamentos</span><span>Tecidos</span><span>Tamanhos</span></nav>
+        <div class="pd" data-k="0">
+          <div class="pd-head"><b class="pd-num">8</b><div><span class="eyebrow">01 · Modelos</span><h3>Modelos no catálogo 2026</h3><p>Futebol, basquete, feminino e short. Todos sob encomenda, nas cores do seu time. Toque num modelo para ver os detalhes.</p></div></div>
+          <div class="pd-models"><button type="button" class="pd-m" data-fit="nba" style="--j:0"><img src="assets/p_nba.jpg" alt="" loading="lazy"><span>Regata NBA</span></button><button type="button" class="pd-m" data-fit="campnou" style="--j:1"><img src="assets/p_campnou.jpg" alt="" loading="lazy"><span>Camp Nou Premium</span></button><button type="button" class="pd-m" data-fit="santiago" style="--j:2"><img src="assets/p_santiago.jpg" alt="" loading="lazy"><span>Santiago Ouro</span></button><button type="button" class="pd-m" data-fit="maracana" style="--j:3"><img src="assets/p_maracana.jpg" alt="" loading="lazy"><span>Maracanã Gold</span></button><button type="button" class="pd-m" data-fit="munique" style="--j:4"><img src="assets/p_munique.jpg" alt="" loading="lazy"><span>Munique Baby Look</span></button><button type="button" class="pd-m" data-fit="paris" style="--j:5"><img src="assets/p_paris.jpg" alt="" loading="lazy"><span>Regata Paris</span></button><button type="button" class="pd-m" data-fit="berlim" style="--j:6"><img src="assets/p_berlim.jpg" alt="" loading="lazy"><span>Regata Berlim</span></button><button type="button" class="pd-m" data-fit="sansiro" style="--j:7"><img src="assets/p_sansiro.jpg" alt="" loading="lazy"><span>Short San Siro</span></button></div>
+        </div>
+        <div class="pd" data-k="1">
+          <div class="pd-head"><b class="pd-num">3</b><div><span class="eyebrow">02 · Acabamentos</span><h3>Acabamentos de escudo</h3><p>O escudo do seu time do jeito que ele merece.</p></div></div>
+          <div class="pd-cards">
+            <div class="pd-c" style="--j:0"><img src="assets/info/sublimado.jpg" alt="Estampa sublimada no tecido" loading="lazy"><b>Sublimado</b><span>Impresso no tecido. Leve e não descasca.</span></div>
+            <div class="pd-c" style="--j:1"><img src="assets/info/bordado.jpg" alt="Escudo bordado" loading="lazy"><b>Bordado</b><span>Linha com relevo, clássico de clube.</span></div>
+            <div class="pd-c" style="--j:2"><img src="assets/info/emborrachado.jpg" alt="Selo emborrachado" loading="lazy"><b>Emborrachado</b><span>Aplicação em relevo, efeito premium.</span></div>
+          </div>
+        </div>
+        <div class="pd" data-k="2">
+          <div class="pd-head"><b class="pd-num">3</b><div><span class="eyebrow">03 · Tecidos</span><h3>Tecidos Dry Fit</h3><p>Todos leves e respiráveis, feitos para jogo.</p></div></div>
+          <div class="pd-cards">
+            <div class="pd-c" style="--j:0"><img src="assets/f_liso.jpg" alt="Dry fit liso" loading="lazy"><b>Dry fit liso</b><span>Leve e uniforme.</span></div>
+            <div class="pd-c" style="--j:1"><img src="assets/f_colmeia.jpg" alt="Dry fit colmeia" loading="lazy"><b>Dry fit colmeia</b><span>Furinhos que ventilam.</span></div>
+            <div class="pd-c" style="--j:2"><img src="assets/f_3d.jpg" alt="Dry fit 3D" loading="lazy"><b>Dry fit 3D</b><span>Textura em relevo no tecido.</span></div>
+          </div>
+        </div>
+        <div class="pd" data-k="3">
+          <div class="pd-head"><b class="pd-num sm">Inf.–GG</b><div><span class="eyebrow">04 · Tamanhos</span><h3>Do infantil ao GG</h3><p>Grade completa para o time todo. Plus size sob consulta.</p></div></div>
+          <div class="pd-sizes">
+            <div class="sz-row" style="--j:0"><span class="sz-l">Masculino</span><div class="sz"><i>Inf.</i><i>P</i><i>M</i><i>G</i><i>GG</i></div></div>
+            <div class="sz-row" style="--j:1"><span class="sz-l">Feminino · baby look</span><div class="sz"><i>P</i><i>M</i><i>G</i><i>GG</i></div></div>
+            <div class="sz-row" style="--j:2"><span class="sz-l">Infantil</span><div class="sz"><i>Inf.</i></div></div>
+            <div class="sz-row plus" style="--j:3"><span class="sz-l">Plus size</span><div class="sz"><i>Sob consulta</i></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1332,6 +1422,38 @@ const Studio = (() => {
   $$('[data-mclose]', menu).forEach(b => b.addEventListener('click', () => closeMenu()));
   document.addEventListener('keydown', e => { if (menu.hidden) return; if (e.key === 'Escape') closeMenu();
     if (e.key === 'Tab'){ const f = $$('a,button', $('.menu-box', menu)); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0){ e.preventDefault(); f[f.length-1].focus(); } else if (!e.shiftKey && i === f.length-1){ e.preventDefault(); f[0].focus(); } } });
+
+
+  /* ====== POR DENTRO: câmera entra no quadro ====== */
+  (() => {
+    const sec = $('#por-dentro'); if (!sec) return;
+    const pin = $('#divePin'), fr = $('#diveFrame'), bg = $('#diveBg'), sh = $('#diveShade'), cov = $('#diveCover'), nav = $('#diveNav'), out = $('.dive-out', sec);
+    const pds = $$('.pd', sec), tabs = $$('span', nav);
+    const cl = x => Math.max(0, Math.min(1, x)), ez = u => u<.5 ? 4*u*u*u : 1-Math.pow(-2*u+2,3)/2;
+    $$('[data-fit]', sec).forEach(b => b.addEventListener('click', () => openFit(b.dataset.fit, b)));
+    function frame(){
+      const r = sec.getBoundingClientRect(), total = sec.offsetHeight - pin.offsetHeight;
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const p = cl((HEAD - r.top) / total);
+      const enter = ez(cl(p / .17)), exit = ez(cl((p - .84) / .16)), open = enter * (1 - exit);
+      const W = pin.clientWidth, H = pin.clientHeight, s0 = Math.min(W * .42, H * .62, 420);
+      const ix = (W - s0) / 2 * (1 - open), iy = (H - s0) / 2 * (1 - open) - (1 - open) * H * .04;
+      fr.style.clipPath = `inset(${Math.max(0,iy).toFixed(1)}px ${ix.toFixed(1)}px ${Math.max(0,(H - s0)/2*(1-open) + (1-open)*H*.04).toFixed(1)}px ${ix.toFixed(1)}px round ${(6*(1-open)).toFixed(1)}px)`;
+      bg.style.transform = `scale(${(1.35 - .25 * open).toFixed(3)})`;
+      sh.style.opacity = (.15 + .85 * open).toFixed(3);
+      cov.style.opacity = cl(1 - open * 2.4).toFixed(3);
+      out.style.opacity = cl(1 - open * 3).toFixed(3);
+      const inside = cl((open - .55) / .35);
+      nav.style.opacity = inside.toFixed(3);
+      const q = cl((p - .15) / .68) * 4; let act = Math.min(3, Math.floor(q));
+      pds.forEach((el, k) => { const d = q - k - .5, vis = cl((.5 - Math.abs(d)) / .16) * inside;
+        el.style.opacity = vis.toFixed(3); el.style.transform = `scale(${(1 + d * .16).toFixed(4)})`;
+        el.classList.toggle('live', vis > .5); el.classList.toggle('on', vis > .55); });
+      tabs.forEach((t, k) => t.classList.toggle('on', k === act));
+    }
+    let tk = 0; addEventListener('scroll', () => { if (!tk) tk = requestAnimationFrame(() => { tk = 0; frame(); }); }, {passive:true});
+    addEventListener('resize', frame); frame();
+  })();
 
   /* ====== COMO FUNCIONA: cenas interativas ====== */
   const sec = $('#como-funciona'); if (!sec) return;
