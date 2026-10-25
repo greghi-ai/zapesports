@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>ZAPE Pedidos</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -216,8 +217,30 @@ td .pc{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;margi
 .pcard .b{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
 .pcard b{font-family:var(--f-label);font-weight:700;font-size:17px;letter-spacing:.06em;text-transform:uppercase}
 .pcard .row{display:flex;gap:6px;margin-top:auto;align-items:center;justify-content:space-between}
-.tg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+.tg{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
 .tg input{width:16px;height:16px;accent-color:var(--gold)}
+.cards.cat{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.cards.cat .row{gap:8px}.cards.cat .row .btn{margin-left:auto}
+.subtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.subtabs button{border:0;background:none;padding:10px 14px;font-family:var(--f-label);font-weight:600;font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.subtabs button[aria-selected="true"]{color:var(--paper);border-bottom-color:var(--gold)}
+.catbar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.fchips{display:flex;flex-wrap:wrap;gap:4px}
+.fchips button{height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:none;color:var(--muted);font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.fchips button[aria-pressed="true"]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.pcard .im{position:relative}
+.pcard.off .im{filter:grayscale(1) brightness(.55)}
+.cbadge{position:absolute;left:8px;top:8px;padding:3px 8px;border-radius:2px;background:rgba(12,11,10,.8);font-family:var(--f-label);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--paper)}
+.cbadge.hid{left:auto;right:8px;color:var(--gold-hi)}
+.pcard .sub{font-size:13px;color:var(--muted);margin-top:-6px}
+.pills{display:flex;flex-wrap:wrap;gap:4px}.pills span{font-size:12px;padding:2px 7px;border:1px solid var(--line);border-radius:10px;color:var(--muted)}
+.ord{display:flex;gap:2px}.x.sm{flex-basis:30px;width:30px;height:30px;font-size:18px;line-height:1;color:var(--paper)}.x.sm:disabled{opacity:.3;cursor:default}
+.cks{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:6px;text-transform:none;letter-spacing:0;font-family:var(--f-body)}
+fieldset.field{border:0;padding:0;margin:0}
+.phedit{display:flex;gap:12px;align-items:end}.phedit .im{width:180px;aspect-ratio:4/3;border-radius:4px;border:1px solid var(--line);background:#d9d7d2 center/cover;display:grid;place-items:center;color:#555}.phedit .im svg{width:28px;height:28px}
+.loja{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:760px}.loja .full{grid-column:1/-1}
+@media (max-width:640px){.loja{grid-template-columns:1fr}}
+
 .note{font-size:13px;color:var(--muted)}
 .empty{padding:40px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:4px}
 
@@ -579,15 +602,83 @@ function adminOrc(){
   m.querySelectorAll('[data-i]').forEach(b=>b.addEventListener('click',()=>{ const x = DB.orc[+b.dataset.i]; const [cl, tm] = x.quem.split(' · ');
     newOrder({cliente:cl, time:tm, itens:x.o, orcIndex:+b.dataset.i}); }));
 }
+const CAT_LABEL = {futebol:'Futebol', feminino:'Feminino', regata:'Regata', short:'Short'};
+const PECA_LABEL = {conjunto:'Conjunto', camisa:'Camisa', calcao:'Calção', regata:'Regata', short:'Short'};
+const TEC_LABEL = {liso:'Dry fit liso', colmeia:'Dry fit colmeia', '3d':'Dry fit 3D', tactel:'Tactel'};
+const KIT = 'Tecidos 3D, colmeia ou liso\nPentilho e recorte Aero Dry\nNome e número individual\nEtiqueta de autenticidade';
+const CATALOGO = [
+  {id:'nba', nome:'Regata NBA', tipo:'Regata basquete', cat:'regata', pecas:['regata'], tecidos:['liso','colmeia','3d'], feat:'Gola e cavas em retilínea\nRecorte na lateral\nSelo de autenticidade', tam:'Masculino, do infantil ao GG', foto:'assets/p_nba.jpg', on:true},
+  {id:'campnou', nome:'Camp Nou Premium', tipo:'Uniforme futebol', cat:'futebol', pecas:['conjunto','camisa','calcao'], tecidos:['liso','colmeia','3d'], feat:KIT, tam:'Infantil ao GG. Plus size sob consulta', foto:'assets/p_campnou.jpg', on:true},
+  {id:'santiago', nome:'Santiago Ouro', tipo:'Uniforme futebol', cat:'futebol', pecas:['conjunto','camisa','calcao'], tecidos:['liso','colmeia','3d'], feat:KIT, tam:'Infantil ao GG. Plus size sob consulta', foto:'assets/p_santiago.jpg', on:true},
+  {id:'maracana', nome:'Maracanã Gold', tipo:'Uniforme futebol', cat:'futebol', pecas:['conjunto','camisa','calcao'], tecidos:['liso','colmeia','3d'], feat:KIT, tam:'Infantil ao GG. Plus size sob consulta', foto:'assets/p_maracana.jpg', on:true},
+  {id:'munique', nome:'Munique Baby Look', tipo:'Uniforme feminino', cat:'feminino', pecas:['conjunto','camisa','calcao'], tecidos:['liso','colmeia','3d'], feat:KIT, tam:'Feminino, do PP ao GG', foto:'assets/p_munique.jpg', on:true},
+  {id:'paris', nome:'Regata Paris', tipo:'Regata', cat:'regata', pecas:['regata'], tecidos:['liso','colmeia','3d'], feat:'Tecidos 3D, colmeia ou liso\nEtiqueta de autenticidade', tam:'Infantil e feminino, do P ao GG. Plus size sob consulta', foto:'assets/p_paris.jpg', on:true},
+  {id:'berlim', nome:'Regata Berlim', tipo:'Regata', cat:'regata', pecas:['regata'], tecidos:['liso','colmeia','3d'], feat:'Gola e cavas em retilínea\nRecorte na lateral\nSelo de autenticidade', tam:'Masculino, do infantil ao GG. Plus size sob consulta', foto:'assets/p_berlim.jpg', on:true},
+  {id:'sansiro', nome:'Short San Siro', tipo:'Short', cat:'short', pecas:['short'], tecidos:['tactel'], feat:'Tecido tactel\nBolso e recorte na lateral', tam:'P ao GG', foto:'assets/p_sansiro.jpg', on:true},
+];
+const LOJA = {wa:'', insta:'@zapesportwear', horario:'Seg a sex, 9h às 18h · Sáb, 9h às 13h', cidade:'', sobre:'Uniformes sob encomenda para futebol, várzea, basquete e eventos.'};
+if (!Array.isArray(DB.catalogo)) DB.catalogo = JSON.parse(JSON.stringify(CATALOGO));
+if (!DB.loja) DB.loja = {...LOJA};
+let siteTab = 'catalogo', catFilter = 'todos';
 function adminSite(){
-  const m = document.getElementById('main');
-  m.innerHTML = `<div class="mhead"><div><span class="lbl">Conteúdo do site</span><h1>Site</h1></div></div>
-    <div class="cards">${DB.modelos.map(([n,src,on],i)=>`<div class="pcard"><div class="im" style="background-image:url('${h(src)}')"></div><div class="b"><b>${h(n)}</b>
-      <div class="row"><label class="tg"><input type="checkbox" data-on="${i}" ${on?'checked':''}> Na arara</label>
-      <label class="btn btn-sm" style="position:relative">Trocar foto<input type="file" accept="image/*" data-ph="${i}" style="position:absolute;inset:0;opacity:0;cursor:pointer" aria-label="Trocar foto de ${h(n)}"></label></div></div></div>`).join('')}</div>
-    <p class="note" style="margin-top:14px">No sistema final, aqui também ficam os textos, o WhatsApp, o horário e os recortes do personalizador.</p>`;
-  m.querySelectorAll('[data-on]').forEach(c=>c.addEventListener('change',()=>{ DB.modelos[+c.dataset.on][2]=c.checked; save(); toast(c.checked?'Aparece na arara':'Saiu da arara'); }));
-  m.querySelectorAll('[data-ph]').forEach(inp=>inp.addEventListener('change',()=>{ const f=inp.files[0]; if(!f) return; shrink(f).then(u=>{ DB.modelos[+inp.dataset.ph][1]=u; save(); adminSite(); toast('Foto trocada'); }); }));
+  const m = document.getElementById('main'); const C = DB.catalogo;
+  const on = C.filter(x=>x.on).length;
+  m.innerHTML = `<div class="mhead"><div><span class="lbl">Conteúdo do site</span><h1>Site</h1></div>
+      ${siteTab==='catalogo'?`<button class="btn btn-gold" id="novoMod" type="button">${svg('plus')} Novo modelo</button>`:''}</div>
+    <div class="subtabs" role="tablist">${[['catalogo','Catálogo'],['loja','Informações da loja']].map(([k,l])=>`<button type="button" role="tab" data-st="${k}" aria-selected="${siteTab===k}">${l}</button>`).join('')}</div>
+    ${siteTab==='catalogo' ? `
+    <div class="catbar"><p class="note" style="margin:0"><b>${C.length} modelos</b> · ${on} aparecem na arara e no catálogo do site</p>
+      <div class="fchips">${['todos','futebol','feminino','regata','short'].map(k=>`<button type="button" data-cf="${k}" aria-pressed="${catFilter===k}">${k==='todos'?'Todos':CAT_LABEL[k]}</button>`).join('')}</div></div>
+    <div class="cards cat">${C.map((x,i)=>(catFilter==='todos'||x.cat===catFilter)?`<div class="pcard${x.on?'':' off'}">
+      <div class="im" style="background-image:url('${h(x.foto)}')"><span class="cbadge">${CAT_LABEL[x.cat]||''}</span>${x.on?'':'<span class="cbadge hid">Fora da arara</span>'}</div>
+      <div class="b"><b>${h(x.nome)}</b><span class="sub">${h(x.tipo)}</span>
+        <div class="pills">${x.pecas.map(p=>`<span>${PECA_LABEL[p]}</span>`).join('')}</div>
+        <div class="row"><label class="tg"><input type="checkbox" data-on="${i}" ${x.on?'checked':''}> Na arara</label>
+          <span class="ord"><button type="button" class="x sm" data-mv="${i}" data-d="-1" aria-label="Mover ${h(x.nome)} para antes" ${i===0?'disabled':''}>‹</button><button type="button" class="x sm" data-mv="${i}" data-d="1" aria-label="Mover ${h(x.nome)} para depois" ${i===C.length-1?'disabled':''}>›</button></span>
+          <button class="btn btn-sm" type="button" data-ed="${i}">Editar</button></div></div></div>`:'').join('')}</div>`
+    : `<form class="upd loja" id="lojaF">
+      <label class="field">WhatsApp da loja<input id="lW" inputmode="tel" placeholder="(11) 90000-0000" value="${h(DB.loja.wa)}"></label>
+      <label class="field">Instagram<input id="lI" value="${h(DB.loja.insta)}"></label>
+      <label class="field">Horário de atendimento<input id="lH" value="${h(DB.loja.horario)}"></label>
+      <label class="field">Cidade<input id="lC" placeholder="Ex.: Santos, SP" value="${h(DB.loja.cidade)}"></label>
+      <label class="field full">Texto de apresentação<textarea id="lS">${h(DB.loja.sobre)}</textarea></label>
+      <div class="full"><button class="btn btn-gold" type="submit">Salvar</button></div></form>`}
+    <p class="note" style="margin-top:14px">Nesta demonstração as mudanças ficam guardadas neste navegador. No sistema final, salvar aqui muda o site na hora.</p>`;
+  m.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ siteTab=b.dataset.st; adminSite(); });
+  m.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{ catFilter=b.dataset.cf; adminSite(); });
+  m.querySelectorAll('[data-on]').forEach(c=>c.addEventListener('change',()=>{ C[+c.dataset.on].on=c.checked; save(); adminSite(); toast(c.checked?'Aparece na arara':'Saiu da arara'); }));
+  m.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{ const i=+b.dataset.mv, j=i+(+b.dataset.d); [C[i],C[j]]=[C[j],C[i]]; save(); adminSite(); toast('Ordem da arara atualizada'); });
+  m.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>editModel(+b.dataset.ed));
+  const nm = m.querySelector('#novoMod'); if (nm) nm.onclick = () => editModel(-1);
+  const lf = m.querySelector('#lojaF'); if (lf) lf.onsubmit = e => { e.preventDefault();
+    Object.assign(DB.loja,{wa:lf.querySelector('#lW').value.trim(), insta:lf.querySelector('#lI').value.trim(), horario:lf.querySelector('#lH').value.trim(), cidade:lf.querySelector('#lC').value.trim(), sobre:lf.querySelector('#lS').value.trim()}); save(); toast('Informações salvas'); };
+}
+function editModel(i){
+  const novo = i<0; const x = novo ? {id:'m'+Date.now(), nome:'', tipo:'', cat:'futebol', pecas:['conjunto','camisa','calcao'], tecidos:['liso','colmeia','3d'], feat:'', tam:'', foto:'', on:true} : {...DB.catalogo[i]};
+  const ck = (name, map, sel) => `<div class="cks">${Object.entries(map).map(([k,l])=>`<label class="tg"><input type="checkbox" name="${name}" value="${k}" ${sel.includes(k)?'checked':''}> ${l}</label>`).join('')}</div>`;
+  const {root, close} = layer(`<div class="drawer-ov" role="dialog" aria-modal="true" aria-labelledby="et"><div class="bd" data-close></div><aside class="drawer">
+    <header><div><span class="lbl">Catálogo</span><h2 id="et">${novo?'Novo modelo':h(x.nome)}</h2></div><button class="x" data-close aria-label="Fechar">${svg('x',2)}</button></header>
+    <form class="sc" id="mf">
+      <div class="phedit"><div class="im" id="mfIm" style="background-image:url('${h(x.foto)}')">${x.foto?'':svg('cam')}</div>
+        <label class="btn btn-sm" style="position:relative;align-self:start">${x.foto?'Trocar foto':'Escolher foto'}<input type="file" accept="image/*" id="mfPh" style="position:absolute;inset:0;opacity:0;cursor:pointer" aria-label="Foto do modelo"></label></div>
+      <label class="field">Nome do modelo<input id="mfN" required value="${h(x.nome)}" placeholder="Ex.: Lisboa Premium"></label>
+      <label class="field">Tipo<input id="mfT" value="${h(x.tipo)}" placeholder="Ex.: Uniforme futebol"></label>
+      <label class="field">Categoria<select id="mfC">${Object.entries(CAT_LABEL).map(([k,l])=>`<option value="${k}" ${x.cat===k?'selected':''}>${l}</option>`).join('')}</select></label>
+      <fieldset class="field"><legend>Peças</legend>${ck('pc', PECA_LABEL, x.pecas)}</fieldset>
+      <fieldset class="field"><legend>Tecidos</legend>${ck('tc', TEC_LABEL, x.tecidos)}</fieldset>
+      <label class="field">Características (uma por linha)<textarea id="mfF" rows="4">${h(x.feat)}</textarea></label>
+      <label class="field">Tamanhos<input id="mfZ" value="${h(x.tam)}" placeholder="Ex.: Infantil ao GG"></label>
+      <label class="tg"><input type="checkbox" id="mfO" ${x.on?'checked':''}> Mostrar na arara e no catálogo</label>
+      <div class="share"><button class="btn btn-gold" type="submit">${novo?'Adicionar ao catálogo':'Salvar'}</button>${novo?'':'<button class="btn" type="button" id="mfDel">Excluir modelo</button>'}</div>
+    </form></aside></div>`);
+  const $ = q => root.querySelector(q);
+  $('#mfPh').onchange = e => { const f=e.target.files[0]; if(!f) return; shrink(f).then(u=>{ x.foto=u; $('#mfIm').style.backgroundImage=`url(${u})`; $('#mfIm').innerHTML=''; }); };
+  $('#mf').onsubmit = e => { e.preventDefault();
+    Object.assign(x,{nome:$('#mfN').value.trim(), tipo:$('#mfT').value.trim(), cat:$('#mfC').value, feat:$('#mfF').value.trim(), tam:$('#mfZ').value.trim(), on:$('#mfO').checked,
+      pecas:[...root.querySelectorAll('[name=pc]:checked')].map(c=>c.value), tecidos:[...root.querySelectorAll('[name=tc]:checked')].map(c=>c.value)});
+    if (!x.pecas.length){ toast('Marque pelo menos uma peça.'); return; }
+    if (novo) DB.catalogo.push(x); else DB.catalogo[i]=x; save(); close(); adminSite(); toast(novo?'Modelo adicionado ao catálogo':'Modelo salvo'); };
+  const del = $('#mfDel'); if (del) del.onclick = () => { if (del.dataset.ok){ DB.catalogo.splice(i,1); save(); close(); adminSite(); toast('Modelo excluído'); } else { del.dataset.ok=1; del.textContent='Toque de novo para excluir'; } };
 }
 
 /* ====== util ====== */
