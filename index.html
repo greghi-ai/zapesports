@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>ZAPE Sport Wear</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,22 +63,30 @@ p{margin:0}
 .sign{display:flex;flex-direction:column;align-items:center;gap:12px;padding-top:clamp(28px,5vw,52px)}
 .sign img{width:clamp(170px,24vw,300px);height:auto;filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
 .sign .eyebrow{color:var(--muted);font-size:13px}
-.rack{position:relative;margin-top:clamp(18px,3vw,34px);height:calc(var(--piece)*1.3 + 64px);cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.rack{position:relative;margin-top:clamp(18px,3vw,34px);height:calc(var(--piece)*1.52 + 64px);cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .rack.dragging{cursor:grabbing}
 .rail{position:absolute;left:clamp(10px,4vw,60px);right:clamp(10px,4vw,60px);top:calc(var(--piece)*.03);height:7px;border-radius:4px;background:linear-gradient(180deg,var(--chrome-a),#b9b8b3 45%,var(--chrome-b));box-shadow:0 10px 14px rgba(0,0,0,.55)}
 .rail::before,.rail::after{content:"";position:absolute;top:-9px;width:12px;height:26px;border-radius:2px;background:linear-gradient(90deg,#55534f,#2b2a27);box-shadow:0 8px 10px rgba(0,0,0,.5)}
 .rail::before{left:-6px}.rail::after{right:-6px}
 .track{position:absolute;top:0;left:0;display:flex;will-change:transform}
-.piece{flex:0 0 var(--piece);width:var(--piece);padding:0;margin:0;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:flex-basis .35s ease,width .35s ease,opacity .3s ease}
+.piece{flex:0 0 calc(var(--piece)*.74);width:calc(var(--piece)*.74);padding:0;margin:0;border:0;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;transition:flex-basis .35s ease,width .35s ease,opacity .3s ease}
 .piece.out{flex-basis:0;width:0;opacity:0;pointer-events:none;visibility:hidden}
 .swing{width:100%;transform-origin:50% 3%}
+.turn{position:relative;width:100%;height:calc(var(--piece)*var(--h));perspective:1100px}
+.face{position:absolute;top:0;left:50%;width:calc(var(--piece)*var(--fw));height:auto;backface-visibility:hidden;filter:drop-shadow(14px 24px 16px rgba(0,0,0,.55))}
+.face.side{transform:translateX(-50%) rotateY(0deg);transition:transform .32s cubic-bezier(.2,.8,.3,1) .18s}
+.face.front{transform:translateX(-50%) rotateY(-90deg);opacity:0;transition:transform .18s cubic-bezier(.5,0,.75,0),opacity 0s .18s}
+.piece:hover .face.side,.piece.on .face.side,.piece:focus-visible .face.side{transform:translateX(-50%) rotateY(90deg);transition:transform .18s cubic-bezier(.5,0,.75,0)}
+.piece:hover .face.front,.piece.on .face.front,.piece:focus-visible .face.front{transform:translateX(-50%) rotateY(0deg);opacity:1;transition:transform .34s cubic-bezier(.2,.8,.3,1) .18s,opacity 0s .18s}
+.piece{position:relative}.piece:hover,.piece.on,.piece:focus-visible{z-index:3}
+@media (prefers-reduced-motion:reduce){.face{transition:none!important}}
 .garment{display:block;width:100%;height:auto;transition:transform .35s cubic-bezier(.2,.8,.2,1),filter .35s;filter:drop-shadow(12px 22px 14px rgba(0,0,0,.55))}
 .piece:hover .garment,.piece:focus-visible .garment{transform:translateY(-4px) scale(1.05);filter:drop-shadow(16px 30px 18px rgba(0,0,0,.6)) brightness(1.06)}
 .piece:focus-visible{outline:none}
 .piece:focus-visible .tag b{outline:2px solid var(--gold);outline-offset:4px}
-.tag{display:flex;flex-direction:column;align-items:center;gap:1px;margin-top:4px;opacity:.75;transition:opacity .25s}
+.tag{display:flex;flex-direction:column;align-items:center;gap:1px;margin-top:4px;opacity:.6;transition:opacity .25s;white-space:nowrap}
 .piece:hover .tag,.piece:focus-visible .tag{opacity:1}
-.tag b{font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:.14em;text-transform:uppercase}
+.tag b{font-family:var(--f-label);font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
 .tag span{font-size:13px;color:var(--muted)}
 @media (max-width:600px){.tag b{font-size:13px;letter-spacing:.05em;white-space:nowrap}.tag span{font-size:12px}}
 .floor{position:relative;border-top:1px solid rgba(255,255,255,.06);background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(0,0,0,.25))}
@@ -552,6 +561,7 @@ function art(m){
   const pat = id==='munique' ? `<pattern id="${id}-p" width="9" height="8" patternUnits="userSpaceOnUse"><polygon points="0,8 4.5,0 9,8" fill="#16822b" opacity=".75"/></pattern>`
             : id==='nba' ? `<pattern id="${id}-p" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-35)"><rect width="2.4" height="7" fill="#9e0d12" opacity=".7"/></pattern>`
             : id==='sansiro' ? `<pattern id="${id}-p" width="8" height="7" patternUnits="userSpaceOnUse"><polygon points="0,7 4,0 8,7" fill="#1a9a33" opacity=".8"/></pattern>` : '';
+  m._d = {base, inner, over, pat, cuff, mark, collar:(collar.match(/stroke="(#[0-9a-fA-F]+)"/)||[])[1]||cuff||mark};
   const cuffs = (CUFF[m.shape] && cuff) ? CUFF[m.shape].map(p=>`<polygon points="${p}" fill="${cuff}"/>`).join('') : '';
   const isTop = m.shape!=='short';
   const hanger = isTop
@@ -570,13 +580,66 @@ ${isTop?hanger:''}<g clip-path="url(#${id}-c)"><rect width="200" height="260" fi
 <rect width="200" height="260" fill="url(#${id}-h)"/><rect width="200" height="260" fill="url(#${id}-v)"/></g>${collar}${isTop?'':hanger}</svg>`;
 }
 
+
+/* ====== ARARA 3D: desenho de cada modelo aplicado sobre foto de camiseta ====== */
+const TOP = 150;
+const MOCK_DIM = {tee:{fw:648, sw:360, H:834+TOP}, short:{fw:560, sw:300, H:520+TOP}};
+const MOCK = {}; const mockReady = Promise.all(['front','side','front_regata','side_regata','short_front','short_side'].map(n => new Promise(r => { const i = new Image(); i.onload = () => { MOCK[n] = i; r(); }; i.onerror = r; i.src = `assets/mock/${n}.png`; })));
+function flatImg(m){ const d = m._d;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260" width="400" height="520"><defs>${d.pat}</defs><rect x="-50" y="-50" width="300" height="360" fill="${d.base}"/>${d.inner}${d.over}</svg>`;
+  return new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); }); }
+function hook(g, x, w){ const gr = g.createLinearGradient(x-20,0,x+60,0); gr.addColorStop(0,'#f4f3ef'); gr.addColorStop(1,'#77756f');
+  g.save(); g.strokeStyle = gr; g.lineWidth = 9; g.lineCap = 'round'; g.beginPath(); g.moveTo(x, TOP+40); g.lineTo(x, 62); g.bezierCurveTo(x, 18, x+48, 6, x+56, 36); g.stroke(); g.restore(); }
+async function paint3d(m, el){
+  await mockReady; const img = await flatImg(m); const d = m._d;
+  const isS = m.shape==='short', isR = m.shape==='regata';
+  for (const view of ['front','side']){
+    const cv = el.querySelector('.face.'+view); const g = cv.getContext('2d');
+    const sh = MOCK[isS ? 'short_'+view : (isR ? view+'_regata' : view)]; if (!sh) continue;
+    const p = document.createElement('canvas'); p.width = sh.width; p.height = sh.height; const q = p.getContext('2d');
+    if (isS) q.setTransform(view==='front'?4.32:4.3, 0, 0, 3.6, view==='front' ? 12-38*4.32 : 150-135*4.3, -74*3.6);
+    else if (view==='front') q.setTransform(4.26, 0, 0, 3.88, 140-56*4.26, 20-40*3.88);
+    else q.setTransform(3.88, 0, 0, 3.88, 150-56*3.88, 20-40*3.88);
+    if (img) q.drawImage(img, 0, 0, 200, 260); else { q.fillStyle = d.base; q.fillRect(0,0,200,260); }
+    q.setTransform(1,0,0,1,0,0); q.lineCap = 'round'; q.lineJoin = 'round';
+    const line = (c, w, pts) => { q.strokeStyle = c; q.lineWidth = w; q.beginPath(); pts.forEach(([x,y],i) => i ? q.lineTo(x,y) : q.moveTo(x,y)); q.stroke(); };
+    if (!isS){
+      if (view==='front'){
+        q.strokeStyle = d.collar; q.lineWidth = isR ? 20 : 26; q.beginPath(); q.ellipse(322, 48, 86, 52, 0, 0, Math.PI*2); q.stroke();
+        if (isR){ const arm = [[236,0],[214,60],[190,130],[172,220],[162,300],[150,392]]; line(d.collar, 18, arm); line(d.collar, 18, arm.map(([x,y]) => [644-x,y])); }
+        else if (d.cuff){ line(d.cuff, 26, [[12,324],[138,352]]); line(d.cuff, 26, [[510,352],[636,322]]); }
+        q.strokeStyle = d.mark; q.lineWidth = 6; q.globalAlpha = .9;
+        q.beginPath(); q.moveTo(222,236); q.lineTo(248,236); q.lineTo(222,262); q.lineTo(248,262); q.stroke();
+        q.beginPath(); q.arc(410, 249, 18, 0, Math.PI*2); q.stroke(); q.globalAlpha = 1;
+      } else {
+        if (isR){ q.beginPath(); q.moveTo(138,92); q.bezierCurveTo(104,170,106,320,152,372); q.bezierCurveTo(196,320,198,170,166,92); q.closePath();
+          const ah = q.createLinearGradient(0,92,0,372); ah.addColorStop(0,'rgba(0,0,0,.35)'); ah.addColorStop(1,'rgba(0,0,0,.7)'); q.fillStyle = ah; q.fill();
+          q.strokeStyle = d.collar; q.lineWidth = 11; q.stroke(); }
+        else if (d.cuff) line(d.cuff, 15, [[84,346],[216,334]]);
+        q.strokeStyle = d.collar; q.lineWidth = 20; q.beginPath(); q.moveTo(92,30); q.quadraticCurveTo(165,0,240,98); q.stroke();
+      }
+    }
+    q.globalCompositeOperation = 'multiply'; q.drawImage(sh, 0, 0);
+    q.globalCompositeOperation = 'destination-in'; q.drawImage(sh, 0, 0);
+    g.clearRect(0,0,cv.width,cv.height);
+    const cx = isS ? cv.width/2 : (view==='front' ? 322 : 165);
+    if (isS){ hook(g, cx); g.fillStyle = '#232220'; g.fillRect(cv.width/2-(view==='front'?230:120), TOP-26, view==='front'?460:240, 14);
+      [-1,1].forEach(s => { const gx = cv.width/2 + s*(view==='front'?190:90); const gr = g.createLinearGradient(gx-16,0,gx+16,0); gr.addColorStop(0,'#eeede9'); gr.addColorStop(1,'#777570'); g.fillStyle = gr; g.fillRect(gx-16, TOP-20, 32, 46); }); }
+    else hook(g, cx);
+    g.drawImage(p, 0, TOP);
+  }
+}
+
 /* ====== ARARA ====== */
 const rack = document.getElementById('rack'), track = document.getElementById('track');
 const pieces = MODELS.map(m => {
   const b = document.createElement('button');
   b.type='button'; b.className='piece'; b.dataset.id=m.id; b.setAttribute('role','listitem');
   b.setAttribute('aria-label', `${m.name}, ${m.kind}. Ver detalhes`);
-  b.innerHTML = `<div class="swing">${art(m)}</div><div class="tag"><b>${m.name}</b><span>${m.kind}</span></div>`;
+  art(m); const isS = m.shape==='short', K = MOCK_DIM[isS?'short':'tee'];
+  b.style.setProperty('--h', (K.H/648).toFixed(3));
+  b.innerHTML = `<div class="swing"><div class="turn"><canvas class="face side" width="${K.sw}" height="${K.H}" style="--fw:${(K.sw/648).toFixed(3)}"></canvas><canvas class="face front" width="${K.fw}" height="${K.H}" style="--fw:${(K.fw/648).toFixed(3)}"></canvas></div></div><div class="tag"><b>${m.name}</b><span>${m.kind}</span></div>`;
+  paint3d(m, b);
   track.appendChild(b);
   return {el:b, sw:b.querySelector('.swing'), m, a:0, w:0};
 });
@@ -584,7 +647,11 @@ let x = 0, v = 0, prevV = 0, target = null, dragging = false, startX = 0, startO
 const bounds = () => { const W = rack.clientWidth, T = track.scrollWidth, pad = Math.min(80, W*.08);
   if (T + pad*2 <= W){ const c = (W - T)/2; return [c,c]; } return [W - T - pad, pad]; };
 const clamp = (val,[a,b]) => Math.max(a, Math.min(b, val));
-const apply = () => { track.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`; };
+const touchOnly = matchMedia('(hover: none)');
+const apply = () => { track.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+  if (touchOnly.matches){ const mid = rack.clientWidth/2; let best = null, bd = 1e9;
+    for (const p of pieces){ if (p.el.classList.contains('out')) continue; const d = Math.abs(x + p.el.offsetLeft + p.el.offsetWidth/2 - mid); if (d < bd){ bd = d; best = p; } }
+    for (const p of pieces) p.el.classList.toggle('on', p === best); } };
 const kick = () => { if(!raf) raf = requestAnimationFrame(tick); };
 function tick(){
   raf = 0; const [lo,hi] = bounds();
