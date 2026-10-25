@@ -1,4 +1,6 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.add('js')</script>
 <title>ZAPE Sport Wear</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +27,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:auto}
 body{background:var(--ink);color:var(--paper);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:rgba(12,11,10,.92)}
 a{color:inherit}
@@ -52,7 +54,7 @@ p{margin:0}
 .top nav a:hover{color:var(--paper)}
 .cart-btn{height:42px;padding:0 16px;font-size:15px}
 .cart-btn .count{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 6px;border-radius:12px;background:#140f02;color:var(--gold);font-size:14px;letter-spacing:0;font-variant-numeric:tabular-nums}
-@media (max-width:860px){.top nav{display:none}.cart-btn{margin-left:auto}}
+
 
 /* ---------- showroom / arara ---------- */
 .showroom{position:relative;overflow:hidden;background:
@@ -297,18 +299,137 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}}
 @keyframes slide{from{transform:translateX(100%)}}
+
+/* ---------- menu em caixa ---------- */
+.menu-btn{margin-left:auto;display:inline-flex;align-items:center;gap:10px;height:42px;padding:0 16px;border:1px solid var(--line);border-radius:2px;background:none;color:var(--paper);font-family:var(--f-label);font-weight:700;font-size:15px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:border-color .2s}
+.menu-btn:hover{border-color:var(--gold)}
+.menu-btn .bars{display:grid;gap:5px;width:18px}.menu-btn .bars i{display:block;height:2px;background:currentColor;transition:transform .3s}
+.menu-btn .bars i:last-child{width:12px}
+.menu-ov{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:16px}
+.menu-ov[hidden]{display:none}
+.menu-bd{position:absolute;inset:0;background:rgba(6,6,5,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);animation:fade .35s ease}
+.menu-box{position:relative;width:min(1040px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:#12110f;border:1px solid var(--line);border-radius:4px;padding:clamp(18px,3vw,30px);animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+.menu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.menu-x{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--paper);cursor:pointer;display:grid;place-items:center}
+.menu-x svg{width:18px;height:18px}.menu-x:hover{border-color:var(--gold)}
+.menu-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.menu-grid a{position:relative;aspect-ratio:3/4;border-radius:3px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:18px;text-decoration:none;color:var(--paper);isolation:isolate;border:1px solid var(--line);opacity:0;transform:translateY(24px);animation:rise .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--k)*70ms + 120ms)}
+.menu-grid a::before{content:"";position:absolute;inset:0;z-index:-2;background:var(--img) 50% 30%/cover;transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .4s;filter:grayscale(.35) brightness(.75)}
+.menu-grid a::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,9,8,0) 35%,rgba(10,9,8,.92))}
+.menu-grid a:hover::before,.menu-grid a:focus-visible::before{transform:scale(1.07);filter:none}
+.menu-grid a:hover,.menu-grid a:focus-visible{border-color:var(--gold);outline:none}
+.menu-grid .n{position:absolute;top:14px;left:16px;font-family:var(--f-label);font-weight:700;font-size:14px;letter-spacing:.2em;color:var(--gold)}
+.menu-grid b{font-family:var(--f-display);font-weight:900;font-size:clamp(28px,3vw,42px);line-height:.9;text-transform:uppercase}
+.menu-grid small{font-size:14px;color:#d6d1c6}
+.menu-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;color:var(--muted);font-size:14px}
+@media (max-width:760px){.menu-grid{grid-template-columns:1fr 1fr}.menu-grid a{aspect-ratio:4/5;padding:14px}}
+@media (max-width:520px){.top .wrap{gap:10px}.menu-btn{padding:0 12px}.menu-btn .ml{display:none}.cart-btn{padding:0 12px;font-size:14px;letter-spacing:.08em}}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}}
+.fader{position:fixed;inset:0;z-index:200;background:#0a0908;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .38s ease}
+.fader img{width:64px;height:64px;opacity:.9;transform:scale(.8);transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.fader.on{opacity:1;pointer-events:auto}.fader.on img{transform:scale(1)}
+
+/* ---------- movimento no scroll ---------- */
+.js [data-rv]{opacity:0;transform:translateY(46px);transition:opacity .9s ease,transform 1s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+.js [data-rv].in{opacity:1;transform:none}
+.js .split .w{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .1em;margin:0 -.02em -.1em}
+.js .split .w>span{display:inline-block;transform:translateY(110%) rotate(4deg);transform-origin:0 100%;transition:transform 1s cubic-bezier(.16,.9,.2,1);transition-delay:calc(var(--i)*70ms)}
+.js .split.in .w>span{transform:none}
+.js .rack .piece{opacity:0;transform:translateY(-30px);transition:opacity .7s ease,transform .9s cubic-bezier(.2,.8,.2,1),flex-basis .35s ease,width .35s ease}
+.js .rack.in .piece{opacity:1;transform:none}
+.js .rack.in .piece.out{opacity:0}
+
+/* ---------- como funciona interativo ---------- */
+.how{position:relative;height:420vh;border-top:1px solid var(--line)}
+.how-pin{position:sticky;top:66px;height:calc(100vh - 66px);height:calc(100dvh - 66px);display:flex;align-items:center;overflow:hidden}
+.how-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,72px);align-items:center;width:100%}
+.how-copy h2{font-size:clamp(46px,6.5vw,96px);margin:10px 0 clamp(18px,3vh,32px)}
+.how-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.how-steps button{width:100%;display:flex;gap:16px;align-items:flex-start;text-align:left;padding:12px 0;border:0;background:none;color:var(--muted);cursor:pointer;transition:color .3s}
+.how-steps .n{font-family:var(--f-display);font-weight:900;font-size:28px;line-height:1;color:inherit;transition:color .3s;min-width:40px}
+.how-steps b{display:block;font-family:var(--f-label);font-weight:700;font-size:21px;letter-spacing:.08em;text-transform:uppercase;line-height:1.1}
+.how-steps small{display:block;font-size:15px;line-height:1.45;max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .4s,margin .4s;color:#cfc9bd}
+.how-steps button.on{color:var(--paper)}.how-steps button.on .n{color:var(--gold)}
+.how-steps button.on small{max-height:60px;opacity:1;margin-top:6px}
+.how-bar{height:3px;background:var(--line);margin-top:18px;border-radius:2px;overflow:hidden}.how-bar i{display:block;height:100%;width:0;background:var(--gold);transition:width .25s linear}
+.how-stage{position:relative;height:min(68vh,600px);border:1px solid var(--line);border-radius:4px;overflow:hidden;background:radial-gradient(70% 60% at 50% 30%,rgba(218,165,32,.12),transparent 70%),radial-gradient(120% 90% at 50% 0%,#24211c,#100f0d 80%)}
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;opacity:0;visibility:hidden;transform:scale(.97);transition:opacity .5s ease,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s .5s}
+.scene.on{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease .1s,transform .7s cubic-bezier(.2,.8,.2,1) .1s,visibility 0s}
+.scene .cap{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0}
+/* cena 1: mini arara */
+.mini-rack{position:relative;width:min(100%,520px);--piece:clamp(120px,15vw,170px)}
+.mrail{position:absolute;left:0;right:0;top:4px;height:6px;border-radius:3px;background:linear-gradient(180deg,var(--chrome-a),#b9b8b3 45%,var(--chrome-b));box-shadow:0 8px 12px rgba(0,0,0,.5)}
+.mpieces{display:flex;justify-content:center}
+.mpieces .piece{flex:0 0 calc(var(--piece)*.78);width:calc(var(--piece)*.78);cursor:default}
+.scene .piece .swing{transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+.scene:not(.on) .mpieces .piece .swing{transform:translateX(60px);opacity:.3}
+/* cena 2: pintar */
+.paint{position:relative;--piece:clamp(200px,24vw,300px)}
+.pshirt .turn{height:calc(var(--piece)*var(--h))}
+.pshirt canvas{transition:filter .6s ease}
+.crest-drop{position:absolute;left:62%;top:34%;width:13%;color:#f2eee5;opacity:0;transform:translateY(-60px) scale(1.4);transition:opacity .4s,transform .7s cubic-bezier(.3,1.4,.4,1)}
+.scene.on .crest-drop{opacity:.95;transform:none;transition-delay:.6s}
+.swatches{display:flex;gap:10px}
+.swatches button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:var(--c);cursor:pointer;transition:transform .2s,border-color .2s}
+.swatches button:hover{transform:scale(1.12)}.swatches button[aria-pressed="true"]{border-color:var(--paper);transform:scale(1.12)}
+/* cena 3: whatsapp */
+.chat{width:min(100%,380px);border-radius:18px;overflow:hidden;background:#0b141a;border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.chat-h{display:flex;gap:10px;align-items:center;padding:12px 14px;background:#1f2c33}
+.chat-h img{width:38px;height:38px;border-radius:50%;background:#0c0b0a;padding:6px}
+.chat-h b{display:block;font-size:15px}.chat-h small{font-size:12px;color:#8696a0}
+.chat-b{min-height:260px;padding:16px 12px;display:flex;flex-direction:column;gap:8px;background:#0b141a}
+.msg{max-width:84%;padding:8px 10px;border-radius:8px;font-size:14px;line-height:1.4;position:relative;opacity:0;transform:translateY(12px);transition:opacity .4s,transform .5s cubic-bezier(.2,.8,.2,1)}
+.msg p{margin:0}.msg.out{align-self:flex-end;background:#005c4b}.msg.in{align-self:flex-start;background:#202c33}
+.msg.show{opacity:1;transform:none}
+.msg .thumb{width:100%;height:120px;border-radius:5px;margin-bottom:6px;background:#0c0b0a;display:grid;place-items:center;overflow:hidden;--piece:110px}
+.msg .thumb .turn{height:calc(var(--piece)*var(--h)*.82)}
+.tick{display:block;text-align:right;font-size:11px;color:#8696a0;margin-top:2px;transition:color .3s}.tick.read{color:#53bdeb}
+.typing{align-self:flex-start;display:none;gap:4px;padding:10px 12px;border-radius:8px;background:#202c33}.typing.show{display:flex}
+.typing i{width:6px;height:6px;border-radius:50%;background:#8696a0;animation:blink 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes blink{50%{opacity:.25}}
+/* cena 4: aprovar */
+.proof{position:relative;width:min(100%,400px);background:#f2eee5;color:#141210;border-radius:4px;padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.proof-h{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline}.proof-h b{font-family:var(--f-display);font-size:26px;text-transform:uppercase}
+.proof-shirt{background:#1a1815;border-radius:3px;display:grid;place-items:center;padding:10px 0;--piece:150px}
+.proof-shirt .turn{height:calc(var(--piece)*var(--h)*.9)}
+.proof-l{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:15px}.proof-l li{border-bottom:1px solid rgba(0,0,0,.12);padding-bottom:6px}
+.proof .btn{grid-column:1/-1}
+.stamp{z-index:6;position:absolute;left:50%;top:42%;margin-left:-110px;padding:8px 16px;border:4px solid #1f9a3a;color:#1f9a3a;font-family:var(--f-display);font-weight:900;font-size:40px;text-transform:uppercase;letter-spacing:.06em;border-radius:4px;transform:rotate(-14deg) scale(2.4);opacity:0;transition:transform .45s cubic-bezier(.3,1.5,.5,1),opacity .2s;pointer-events:none;background:rgba(242,238,229,.85)}
+.proof.ok .stamp{transform:rotate(-14deg) scale(1);opacity:1}
+.proof.ok .btn{background:#1f9a3a;border-color:#1f9a3a;color:#fff}
+/* cena 5: acompanhar */
+.trk{width:min(100%,420px);background:#12110f;border:1px solid var(--line);border-radius:6px;padding:20px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.trk-h{display:flex;flex-direction:column;gap:4px;font-size:14px;color:var(--muted)}.trk-h b{color:var(--paper)}.trk-h .link{color:var(--gold-hi);font-size:13px}
+.trk-pct{font-family:var(--f-display);font-weight:900;font-size:84px;line-height:.9;margin-top:10px;color:var(--gold)}.trk-pct span{font-size:40px}
+.trk-now{font-family:var(--f-label);font-weight:700;font-size:20px;letter-spacing:.1em;text-transform:uppercase}
+.trk-bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:12px 0}.trk-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-hi));transition:width .5s ease}
+.trk-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;font-size:13px;color:#6f6a60}
+.trk-list li{display:flex;gap:6px;align-items:center;transition:color .3s}.trk-list li::before{content:"";width:8px;height:8px;border-radius:50%;border:1px solid currentColor;flex:0 0 8px}
+.trk-list li.done{color:var(--paper)}.trk-list li.done::before{background:var(--gold);border-color:var(--gold)}
+.replay{margin-top:14px;border:0;background:none;color:var(--muted);font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+@media (max-width:900px){
+  .how{height:auto}
+  .how-pin{position:relative;top:0;height:auto;padding-block:56px}
+  .how-grid{grid-template-columns:1fr}
+  .how-steps{flex-direction:row;gap:6px;overflow-x:auto}
+  .how-steps li{flex:1 0 auto}
+  .how-steps button{flex-direction:column;gap:4px;padding:10px 12px;border:1px solid var(--line);border-radius:3px}
+  .how-steps button.on{border-color:var(--gold)}
+  .how-steps small{display:none}
+  .how-steps b{font-size:15px}
+  .how-stage{height:min(118vw,540px)}
+}
+@media (prefers-reduced-motion:reduce){.js [data-rv],.js .split .w>span,.js .rack .piece{opacity:1!important;transform:none!important}}
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#arara" aria-label="ZAPE Sport Wear, início"><img src="assets/logo.png" alt="ZAPE Sport Wear"></a>
-    <nav aria-label="Seções">
-      <a href="#arara">Arara</a>
-      <a href="#monte">Monte a sua</a>
-      <a href="#modelos">Modelos</a>
-      <a href="#como-funciona">Como funciona</a>
-    </nav>
+    <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span class="bars" aria-hidden="true"><i></i><i></i></span><span class="ml">Menu</span></button>
     <button class="btn btn-gold cart-btn" id="openCart" type="button">Orçamento <span class="count" id="cartCount">0</span></button>
   </div>
 </header>
@@ -460,16 +581,64 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
     </div>
   </section>
 
-  <section class="section" id="como-funciona">
-    <div class="wrap">
-      <div class="head"><div><span class="eyebrow">Como funciona</span><h2>Da arara ao campo</h2></div></div>
-      <ol class="steps">
-        <li><span class="num">1</span><b>Escolha</b><p>Escolha o modelo na arara ou no catálogo.</p></li>
-        <li><span class="num">2</span><b>Monte</b><p>Pinte a camisa e coloque o escudo do time.</p></li>
-        <li><span class="num">3</span><b>Envie</b><p>O pedido vai pro WhatsApp. Mande o escudo, as cores e os patrocínios.</p></li>
-        <li><span class="num">4</span><b>Aprove</b><p>A gente faz a arte final, passa o valor e você aprova.</p></li>
-        <li><span class="num">5</span><b>Receba</b><p>Produção com nome e número de cada jogador.</p></li>
-      </ol>
+  <section class="how" id="como-funciona" aria-label="Como funciona">
+    <div class="how-pin">
+      <div class="wrap how-grid">
+        <div class="how-copy">
+          <span class="eyebrow">Como funciona</span>
+          <h2 class="split">Da arara ao campo</h2>
+          <ol class="how-steps">
+            <li><button type="button" data-step="0"><span class="n">01</span><span class="t"><b>Escolha</b><small>Passe pela arara e escolha o modelo do seu time.</small></span></button></li>
+            <li><button type="button" data-step="1"><span class="n">02</span><span class="t"><b>Monte</b><small>Pinte cada parte da camisa e coloque o escudo.</small></span></button></li>
+            <li><button type="button" data-step="2"><span class="n">03</span><span class="t"><b>Envie</b><small>O pedido chega pronto no WhatsApp da ZAPE.</small></span></button></li>
+            <li><button type="button" data-step="3"><span class="n">04</span><span class="t"><b>Aprove</b><small>A gente faz a arte final e você aprova antes de produzir.</small></span></button></li>
+            <li><button type="button" data-step="4"><span class="n">05</span><span class="t"><b>Acompanhe e receba</b><small>Siga cada etapa da produção pelo seu link, com foto.</small></span></button></li>
+          </ol>
+          <div class="how-bar" aria-hidden="true"><i id="howBar"></i></div>
+        </div>
+        <div class="how-stage" id="howStage">
+          <div class="scene" data-scene="0">
+            <div class="mini-rack"><div class="mrail"></div><div class="mpieces" id="mRack"></div></div>
+            <p class="cap">Passe o mouse nas peças</p>
+          </div>
+          <div class="scene" data-scene="1">
+            <div class="paint"><div class="pshirt" id="pShirt"></div><span class="crest-drop" aria-hidden="true"><svg viewBox="0 0 40 46"><path d="M3 3h34v19c0 12-8 19-17 22C11 41 3 34 3 22Z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 3"/><text x="20" y="22" text-anchor="middle" font-size="7.5" font-weight="800" fill="currentColor" font-family="Big Shoulders Display, Impact">SEU</text><text x="20" y="31" text-anchor="middle" font-size="7.5" font-weight="800" fill="currentColor" font-family="Big Shoulders Display, Impact">ESCUDO</text></svg></span></div>
+            <div class="swatches" role="group" aria-label="Testar cores">
+              <button type="button" data-hue="0" style="--c:#1d42c4" aria-label="Azul"></button><button type="button" data-hue="135" style="--c:#c8141c" aria-label="Vermelho"></button><button type="button" data-hue="-95" style="--c:#1f9a3a" aria-label="Verde"></button><button type="button" data-hue="60" style="--c:#5b2a91" aria-label="Roxo"></button><button type="button" data-hue="170" style="--c:#ee6a14" aria-label="Laranja"></button><button type="button" data-hue="-160" style="--c:#daa520" aria-label="Dourado"></button>
+            </div>
+            <p class="cap">Toque nas cores</p>
+          </div>
+          <div class="scene" data-scene="2">
+            <div class="chat">
+              <div class="chat-h"><img src="assets/sym.png" alt=""><div><b>ZAPE Sport Wear</b><small id="chatSt">online</small></div></div>
+              <div class="chat-b">
+                <div class="msg out" id="mOut"><div class="thumb" id="chatThumb"></div><p>Oi, ZAPE! Quero orçamento:<br><b>18 conjuntos Santiago Ouro</b><br>Time: Galácticos FC · escudo bordado</p><span class="tick" id="tick">✓✓</span></div>
+                <div class="msg in" id="mIn"><p>Recebido! Já vamos montar a arte final do Galácticos.</p></div>
+                <div class="typing" id="typing"><i></i><i></i><i></i></div>
+              </div>
+            </div>
+          </div>
+          <div class="scene" data-scene="3">
+            <div class="proof">
+              <div class="proof-h"><span class="eyebrow">Arte final · v2</span><b>Galácticos FC</b></div>
+              <div class="proof-shirt" id="proofShirt"></div>
+              <ul class="proof-l"><li>18 conjuntos</li><li>Escudo bordado</li><li>Nome e número</li></ul>
+              <button class="btn btn-gold" type="button" id="approve">Aprovar arte</button>
+              <span class="stamp" aria-hidden="true">Aprovado</span>
+            </div>
+          </div>
+          <div class="scene" data-scene="4">
+            <div class="trk">
+              <div class="trk-h"><span>Pedido <b>ZP-1045</b></span><span class="link">zapesport.com.br/pedido/ZP-1045</span></div>
+              <div class="trk-pct"><b id="tPct">0</b><span>%</span></div>
+              <div class="trk-now" id="tNow">Na fila</div>
+              <div class="trk-bar"><i id="tBar"></i></div>
+              <ol class="trk-list" id="tList"></ol>
+              <button class="replay" type="button" id="tReplay">Ver de novo</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -498,6 +667,21 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 </footer>
 
 <div id="layer"></div>
+<div class="menu-ov" id="menu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
+  <div class="menu-bd" data-mclose></div>
+  <div class="menu-box">
+    <div class="menu-top"><span class="eyebrow">Para onde você quer ir?</span><button class="menu-x" type="button" data-mclose aria-label="Fechar menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <nav class="menu-grid" aria-label="Seções">
+      <a href="#arara" style="--img:url(assets/menu/arara.jpg)"><span class="n">01</span><b>Arara</b><small>Passe pelas peças</small></a>
+      <a href="#monte" style="--img:url(assets/menu/monte.jpg)"><span class="n">02</span><b>Monte a sua</b><small>Pinte a camisa do seu time</small></a>
+      <a href="#modelos" style="--img:url(assets/menu/modelos.jpg)"><span class="n">03</span><b>Modelos</b><small>Catálogo 2026</small></a>
+      <a href="#como-funciona" style="--img:url(assets/menu/como.jpg)"><span class="n">04</span><b>Como funciona</b><small>Do pedido à entrega</small></a>
+    </nav>
+    <div class="menu-foot"><button class="btn btn-gold" type="button" data-open-cart data-mclose>Ver meu orçamento</button><span>Tudo sob encomenda · @zapesportwear</span></div>
+  </div>
+</div>
+<div class="fader" id="fader" aria-hidden="true"><img src="assets/sym.png" alt=""></div>
+
 
 <script>
 (() => {
@@ -1094,5 +1278,116 @@ const Studio = (() => {
   if (document.fonts){ document.fonts.load('900 100px "Big Shoulders Display"').then(redraw).catch(()=>{}); document.fonts.ready.then(redraw); }
   return {useTemplate: k => useTemplate(k, false)};
 })();
+/* ====== MOVIMENTO, MENU E "COMO FUNCIONA" ====== */
+(() => {
+  const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (q, r=document) => r.querySelector(q), $$ = (q, r=document) => [...r.querySelectorAll(q)];
+  const HEAD = 66;
+
+  /* títulos: cada palavra sobe de dentro de uma máscara */
+  function split(el){ let i = 0;
+    const walk = n => [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3){ const f = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(p => { if (!p) return; if (/^\s+$/.test(p)){ f.appendChild(document.createTextNode(p)); return; }
+          const w = document.createElement('span'), s = document.createElement('span'); w.className = 'w'; s.textContent = p; s.style.setProperty('--i', i++); w.appendChild(s); f.appendChild(w); });
+        c.replaceWith(f); }
+      else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c); });
+    walk(el); el.classList.add('split'); }
+  $$('main h1, main h2').forEach(split);
+
+  /* elementos que entram em cena */
+  const rv = (q, step=0) => $$(q).forEach((el,k) => { el.dataset.rv = ''; el.style.setProperty('--d', (k*step)+'ms'); });
+  rv('.sign'); rv('.intro .side p'); rv('.intro .facts div', 80); rv('.intro .ctas'); rv('main .eyebrow');
+  rv('.head p'); rv('.studio'); rv('.final .ctas'); rv('.how-steps li', 70); rv('.how-stage'); rv('.how-bar');
+  const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; e.target.classList.add('in'); io.unobserve(e.target);
+    if (e.target.matches('.facts div')) count(e.target.querySelector('dt')); }), {rootMargin:'0px 0px -10% 0px', threshold:.12});
+  $$('[data-rv], .split').forEach(el => io.observe(el));
+  // cards do catálogo (criados depois)
+  const grid = $('#grid'); if (grid){ const tag = () => $$('#grid > *').forEach((el,k) => { if (el.dataset.rv !== undefined) return; el.dataset.rv=''; el.style.setProperty('--d', (k%4*90)+'ms'); io.observe(el); });
+    tag(); new MutationObserver(tag).observe(grid, {childList:true}); }
+  function count(dt){ if (!dt || RM) return; const n = parseInt(dt.textContent); if (isNaN(n) || dt.textContent.trim() !== String(n)) return;
+    const t0 = performance.now(); (function f(t){ const u = Math.min(1,(t-t0)/900); dt.textContent = Math.round(n*(1-Math.pow(1-u,3))); if (u<1) requestAnimationFrame(f); })(t0); }
+  // arara: peças caem na arara ao abrir
+  const rack = $('#rack'); if (rack){ $$('.piece', rack).forEach((p,k) => p.style.transitionDelay = (200 + k*80)+'ms');
+    setTimeout(() => { rack.classList.add('in'); setTimeout(() => $$('.piece', rack).forEach(p => p.style.transitionDelay = ''), 1800); }, 150); }
+
+  /* transição com fade ao navegar */
+  const fader = $('#fader');
+  function go(hash){ const t = hash === '#top' ? null : document.getElementById(hash.slice(1)); if (hash !== '#top' && !t) return;
+    const jump = () => { const y = t ? t.getBoundingClientRect().top + scrollY - (t.id === 'arara' ? HEAD : HEAD - 1) : 0; scrollTo({top: Math.max(0, y), behavior:'instant'}); history.replaceState(null, '', hash); };
+    if (RM){ closeMenu(); jump(); return; }
+    fader.classList.add('on');
+    setTimeout(() => { closeMenu(true); jump(); setTimeout(() => fader.classList.remove('on'), 120); }, 400); }
+  document.addEventListener('click', e => { const a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href').length < 2) return; e.preventDefault(); go(a.getAttribute('href')); });
+
+  /* menu em caixa */
+  const menu = $('#menu'), mBtn = $('#menuBtn'); let lastF = null;
+  function openMenu(){ lastF = document.activeElement; menu.hidden = false; mBtn.setAttribute('aria-expanded','true'); document.body.style.overflow = 'hidden';
+    $$('.menu-grid a', menu).forEach((a,k) => { a.style.setProperty('--k', k); a.style.animation = 'none'; a.offsetWidth; a.style.animation = ''; });
+    setTimeout(() => $('.menu-grid a', menu).focus({preventScroll:true}), 60); }
+  function closeMenu(silent){ if (menu.hidden) return; menu.hidden = true; mBtn.setAttribute('aria-expanded','false'); document.body.style.overflow = ''; if (!silent && lastF) lastF.focus({preventScroll:true}); }
+  mBtn.addEventListener('click', openMenu);
+  $$('[data-mclose]', menu).forEach(b => b.addEventListener('click', () => closeMenu()));
+  document.addEventListener('keydown', e => { if (menu.hidden) return; if (e.key === 'Escape') closeMenu();
+    if (e.key === 'Tab'){ const f = $$('a,button', $('.menu-box', menu)); const i = f.indexOf(document.activeElement); if (e.shiftKey && i <= 0){ e.preventDefault(); f[f.length-1].focus(); } else if (!e.shiftKey && i === f.length-1){ e.preventDefault(); f[0].focus(); } } });
+
+  /* ====== COMO FUNCIONA: cenas interativas ====== */
+  const sec = $('#como-funciona'); if (!sec) return;
+  const pin = $('.how-pin', sec), btns = $$('[data-step]', sec), scenes = $$('.scene', sec), bar = $('#howBar');
+  const byId = id => MODELS.find(m => m.id === id);
+  function shirt(id, host, front){ const m = byId(id); const K = MOCK_DIM.tee; const el = document.createElement('div'); el.className = 'piece' + (front ? ' on' : '');
+    el.style.setProperty('--h', (K.H/648).toFixed(3));
+    el.innerHTML = `<div class="swing"><div class="turn"><canvas class="face side" width="${K.sw}" height="${K.H}" style="--fw:${(K.sw/648).toFixed(3)}"></canvas><canvas class="face front" width="${K.fw}" height="${K.H}" style="--fw:${(K.fw/648).toFixed(3)}"></canvas></div></div>`;
+    host.appendChild(el); paint3d(m, el); return el; }
+  if (matchMedia('(hover: none)').matches) $('[data-scene="0"] .cap', sec).textContent = 'Toque nas peças';
+  const mini = ['maracana','santiago','campnou'].map(id => shirt(id, $('#mRack')));
+  const pS = shirt('campnou', $('#pShirt'), true);
+  shirt('santiago', $('#chatThumb'), true); shirt('santiago', $('#proofShirt'), true);
+
+  const STG = ['Aguardando pagamento','Na fila','Diagramação','Aprovação da arte','Impressão','Calandragem','Corte a laser','Costura','Revisão','Embalagem','Pronto','Enviado','Entregue'];
+  $('#tList').innerHTML = STG.map(n => `<li>${n}</li>`).join('');
+
+  let cur = -1, timers = [], userHue = false;
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const SC = [
+    () => { let k = 1; const flip = () => { mini.forEach((p,i) => p.classList.toggle('on', i === k)); k = (k+1) % 3; later(flip, 1700); }; later(flip, 700); },
+    () => { const sw = $$('.swatches button', sec); const set = b => { sw.forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('canvas', pS).forEach(c => c.style.filter = `hue-rotate(${b.dataset.hue}deg)`); };
+      set(sw[0]); if (!userHue){ let k = 1; const cyc = () => { if (userHue) return; set(sw[k]); k = (k+1) % sw.length; later(cyc, 1300); }; later(cyc, 1300); } },
+    () => { const o = $('#mOut'), i = $('#mIn'), ty = $('#typing'), st = $('#chatSt'), tk = $('#tick');
+      [o,i].forEach(x => x.classList.remove('show')); ty.classList.remove('show'); tk.classList.remove('read'); st.textContent = 'online';
+      later(() => o.classList.add('show'), 300); later(() => tk.classList.add('read'), 1100);
+      later(() => { ty.classList.add('show'); st.textContent = 'digitando…'; }, 1500); later(() => { ty.classList.remove('show'); i.classList.add('show'); st.textContent = 'online'; }, 2900); },
+    () => { const p = $('.proof', sec); p.classList.remove('ok'); $('#approve').textContent = 'Aprovar arte'; later(() => approve(), 2600); },
+    () => runTrack()
+  ];
+  function approve(){ const p = $('.proof', sec); if (p.classList.contains('ok')) return; p.classList.add('ok'); $('#approve').textContent = 'Arte aprovada ✓'; }
+  $('#approve').addEventListener('click', approve);
+  $$('.swatches button', sec).forEach(b => b.addEventListener('click', () => { userHue = true; timers.forEach(clearTimeout); timers = [];
+    $$('.swatches button', sec).forEach(x => x.setAttribute('aria-pressed', String(x === b))); $$('canvas', pS).forEach(c => c.style.filter = `hue-rotate(${b.dataset.hue}deg)`); }));
+  function runTrack(){ const li = $$('#tList li'); let k = 0;
+    const step = () => { li.forEach((x,i) => x.classList.toggle('done', i <= k)); $('#tNow').textContent = STG[k]; const pct = Math.round((k+1)/STG.length*100);
+      $('#tPct').textContent = pct; $('#tBar').style.width = pct + '%'; if (k < STG.length-1){ k++; later(step, 420); } };
+    li.forEach(x => x.classList.remove('done')); $('#tBar').style.width = '0%'; $('#tPct').textContent = '0'; later(step, 400); }
+  $('#tReplay').addEventListener('click', () => { timers.forEach(clearTimeout); timers = []; runTrack(); });
+
+  function show(i){ if (i === cur) return; cur = i; timers.forEach(clearTimeout); timers = [];
+    btns.forEach((b,k) => { b.classList.toggle('on', k === i); b.setAttribute('aria-current', k === i ? 'step' : 'false'); });
+    scenes.forEach((s,k) => s.classList.toggle('on', k === i)); SC[i](); }
+  const desktop = () => innerWidth > 900;
+  function onScroll(){ if (!desktop()) return; const r = sec.getBoundingClientRect(), total = sec.offsetHeight - pin.offsetHeight;
+    const p = Math.max(0, Math.min(1, (HEAD - r.top) / total)); bar.style.width = (p*100).toFixed(1) + '%';
+    if (r.top < innerHeight && r.bottom > 0) show(Math.min(4, Math.floor(p*5))); }
+  let tick = 0; addEventListener('scroll', () => { if (!tick) tick = requestAnimationFrame(() => { tick = 0; onScroll(); }); }, {passive:true});
+  addEventListener('resize', onScroll);
+  btns.forEach((b,k) => b.addEventListener('click', () => {
+    if (!desktop()){ show(k); bar.style.width = ((k+1)/5*100) + '%'; return; }
+    const total = sec.offsetHeight - pin.offsetHeight, top = sec.getBoundingClientRect().top + scrollY - HEAD + (k + .5)/5*total;
+    scrollTo({top, behavior: RM ? 'auto' : 'smooth'}); }));
+  // celular: começa quando a seção aparece
+  new IntersectionObserver(es => { if (es[0].isIntersecting && cur < 0){ show(0); if (!desktop()) bar.style.width = '20%'; } }, {threshold:.3}).observe(sec);
+  onScroll();
+})();
 })();
 </script>
+
+
