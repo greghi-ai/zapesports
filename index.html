@@ -235,7 +235,8 @@ p{margin:0}
 
 /* ---------- final ---------- */
 .final{position:relative;overflow:hidden;border-top:1px solid var(--line);padding-block:clamp(70px,10vw,140px);text-align:center;isolation:isolate}
-.final::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,var(--ink) 0%,rgba(12,11,10,.82) 45%,rgba(12,11,10,.4) 80%,var(--ink)),url("assets/cover.jpg") 50% 100%/cover no-repeat;opacity:.7}
+.final::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,var(--ink) 0%,rgba(12,11,10,.35) 30%,rgba(12,11,10,.35) 70%,var(--ink) 100%),radial-gradient(60% 70% at 50% 50%,rgba(12,11,10,.55),transparent 80%)}
+.final-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;opacity:.24;filter:grayscale(.25) contrast(1.05);pointer-events:none}
 .final h2{font-size:clamp(48px,9vw,128px);margin:12px 0 26px}
 .final .ctas{justify-content:center}
 footer.site{border-top:1px solid var(--line);padding-block:36px calc(36px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:14px}
@@ -644,6 +645,7 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
   </section>
 
   <section class="final">
+    <video class="final-bg" autoplay muted loop playsinline preload="metadata" poster="assets/video/laser.jpg" aria-hidden="true" tabindex="-1"><source src="assets/video/laser.mp4" type="video/mp4"></video>
     <div class="wrap">
       <span class="eyebrow">Tudo sob encomenda</span>
       <h2>Bora vestir<br>o time?</h2>
