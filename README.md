@@ -1,6 +1,6 @@
 # ZAPE Sport Wear — site
 
-Site da ZAPE Sport Wear (zapesport.com.br): camisas de time personalizadas, sob encomenda.
+Site da ZAPE Sport Wear (zapesportwear.com.br): camisas de time personalizadas, sob encomenda.
 
 ## Páginas
 - `index.html` — site: arara interativa, estúdio de design 2D, modelos, orçamento via WhatsApp
