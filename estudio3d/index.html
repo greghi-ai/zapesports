@@ -276,13 +276,13 @@ function buildMannequin(G,dims){
 }
 function clear(g){while(g.children.length){const c=g.children.pop();c.traverse(o=>{if(o.geometry)o.geometry.dispose()});}}
 async function build(id){
-  document.getElementById('load').style.opacity=1;
+  document.getElementById('load').style.display='grid';
   cur=id;await getModelImg(id);paintTexture();
   Object.values(parts).forEach(clear);
   const M=MODELS[id];
   const dims=buildShirt(M,parts.camisa);buildShorts(M,parts.short);buildSocks(M,parts.meiao);buildMannequin(parts.manequim,dims);
   applySock();
-  document.getElementById('load').style.opacity=0;
+  document.getElementById('load').style.display='none';
 }
 function applySock(){
   const c=SOCKS[sockIdx][1]||MODELS[cur].sock;sockSolid.color.set(c);
