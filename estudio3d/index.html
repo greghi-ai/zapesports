@@ -198,75 +198,28 @@ const parts={camisa:new THREE.Group(),short:new THREE.Group(),meiao:new THREE.Gr
 Object.values(parts).forEach(p=>kit.add(p));
 const sm=(a,b,x)=>{const t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t)};
 
-const ZC=-1.2;
-function buildShirt(M,G){
-  const segs=[...M.body.front.map(r=>({r,f:1})),...M.body.back.map(r=>({r,f:0}))];
-  const W=segs.reduce((s,o)=>s+(o.r[2]-o.r[0]),0),Wf=M.body.front.reduce((s,r)=>s+r[2]-r[0],0);
-  const hMax=Math.max(...segs.map(o=>o.r[3]-o.r[1]))*S;
-  const Yt=TUNE.yt, Yb=Yt-hMax;
-  const C=W*S, k=0.66; const a=C/(Math.PI*(3*(1+k)-Math.sqrt((3+k)*(1+3*k))))*TUNE.loose ,b=a*k;
-  let th=-Math.PI*Wf/W;
-  for(const o of segs){
-    const r=o.r,w=r[2]-r[0],dth=2*Math.PI*w/W,h=(r[3]-r[1])*S,th0=th;
-    const geo=grid(Math.max(8,Math.round(NU*w/W*2)),NV,(s,t)=>{
-      const ang=th0+s*dth,y=Yb+t*h,tt=(y-Yb)/(Yt-Yb);
-      const shoulder=sm(0.86,1.0,tt);
-      const ax=a*(1+TUNE.sh*sm(0.55,0.9,tt))*(1-0.12*shoulder), bz=b*(1+0.06*sm(0.5,0.8,tt))*(1-0.85*shoulder*shoulder)+0.9;
-      const chest=1+0.05*Math.exp(-((tt-0.72)**2)/0.02)*Math.max(0,Math.cos(ang));
-      const drop=-7*shoulder*Math.abs(Math.sin(ang))**2;
-      const zc=-TUNE.lean*sm(0.55,1,tt);
-      return {p:[ax*Math.sin(ang),y+drop,bz*Math.cos(ang)*chest+zc],uv:[r[0]+s*w,r[3]-t*(r[3]-r[1])]};
-    });
-    dual(geo,G,'tronco');th+=dth;
-  }
-  M.sleeves.forEach((r,i)=>{
-    const sgn=i===0?-1:1, h=(r[3]-r[1])*S;
-    const dir=new THREE.Vector3(TUNE.armdx*sgn,-1,0).normalize();
-    const P0=new THREE.Vector3(sgn*TUNE.armx,TUNE.army,-TUNE.lean*0.7);
-    const U=new THREE.Vector3(-dir.y,dir.x,0).multiplyScalar(sgn).normalize(), V=new THREE.Vector3(0,0,1);
-    const geo=grid(64,40,(s,t)=>{
-      const ty=r[3]-t*(r[3]-r[1]), ex=rowExtent(cur,r,ty)||[r[0],r[2]];
-      const rad=(ex[1]-ex[0])*S/(2*Math.PI)+0.8;
-      const along=(1-t)*h, psi=(s-0.5)*2*Math.PI*sgn;
-      const c=P0.clone().addScaledVector(dir,along);
-      const p=c.addScaledVector(U,Math.cos(psi)*rad).addScaledVector(V,Math.sin(psi)*rad);
-      return {p:[p.x,p.y,p.z],uv:[ex[0]+s*(ex[1]-ex[0]),ty]};
-    });
-    dual(geo,G,'manga',true);
-    const cr=M.cuffs[i],ch=(cr[3]-cr[1])*S;
-    const ty1=r[3]-0.002, ex=rowExtent(cur,r,ty1)||[r[0],r[2]], rad=(ex[1]-ex[0])*S/(2*Math.PI)+1.1;
-    const cg=grid(64,6,(s,t)=>{const psi=(s-0.5)*2*Math.PI*sgn,c=P0.clone().addScaledVector(dir,h-ch*0.7+(1-t)*ch);
-      const p=c.addScaledVector(U,Math.cos(psi)*rad).addScaledVector(V,Math.sin(psi)*rad);return {p:[p.x,p.y,p.z],uv:[cr[0]+s*(cr[2]-cr[0]),cr[3]-t*(cr[3]-cr[1])]}});
-    dual(cg,G,'punho',true);
+const kitCache={};
+const matKit=new THREE.MeshStandardMaterial({map:tex,roughness:0.82,metalness:0,side:THREE.DoubleSide,envMapIntensity:0.75});
+const panelSolid=new THREE.MeshStandardMaterial({color:0xeeeeea,roughness:0.85,side:THREE.DoubleSide});
+async function loadKit(id){
+  if(kitCache[id])return kitCache[id];
+  const [hdr,buf]=await Promise.all([fetch(`tex/kit_${id}.json`).then(r=>r.json()),fetch(`tex/kit_${id}.bin`).then(r=>r.arrayBuffer())]);
+  let o=0;
+  const pieces=hdr.map(h=>{
+    const P=new Int16Array(buf,o,h.nv*3);o+=h.nv*6;const X=new Uint16Array(buf,o,h.nv*2);o+=h.nv*4;const I=new Uint16Array(buf,o,h.ni);o+=h.ni*2;o=(o+3)&~3;
+    const pos=new Float32Array(h.nv*3);for(let i=0;i<pos.length;i++)pos[i]=P[i]/100;
+    const uv=new Float32Array(h.nv*2);for(let i=0;i<uv.length;i++)uv[i]=X[i]/65535;
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setIndex(new THREE.BufferAttribute(I,1));g.computeVertexNormals();
+    const out=h.u[0]<-0.002||h.v[0]<-0.002||h.u[1]>1.002||h.v[1]>1.002;
+    const part=h.ymax<560?'meiao':(h.ymax<1110&&h.ymin>550?'short':'camisa');
+    return {g,out,part};
   });
-  return {a,b,Yb,Yt};
+  kitCache[id]=pieces;return pieces;
 }
-// tube along a line from top point A to bottom point B
-function tube(G,r,A,B,name,rotOff=0,extra=0.4,zs=1){
-  const geo=grid(72,48,(s,t)=>{
-    const ty=r[3]-t*(r[3]-r[1]), ex=rowExtent(cur,r,ty)||[r[0],r[2]];
-    const rad=(ex[1]-ex[0])*S/(2*Math.PI)+extra;
-    const phi=rotOff+(s-0.5)*2*Math.PI, k=1-t;
-    const cx=A[0]+(B[0]-A[0])*k, cy=A[1]+(B[1]-A[1])*k, cz=A[2]+(B[2]-A[2])*k;
-    return {p:[cx+rad*Math.sin(phi),cy,cz+rad*zs*Math.cos(phi)],uv:[ex[0]+s*(ex[1]-ex[0]),ty]};
-  });
-  return dual(geo,G,name);
-}
-function buildShorts(M,G){
-  M.shorts.forEach((r,i)=>{const sgn=i===0?-1:1,h=(r[3]-r[1])*S;
-    const A=[sgn*TUNE.hipx,TUNE.waist,-1.6],B=[sgn*(TUNE.hipx+h*TUNE.legdx),TUNE.waist-h,-0.8];
-    tube(G,r,A,B,'short',sgn*Math.PI/2,TUNE.shortExtra,1.18);});
-}
-function buildSocks(M,G){
-  for(let i=0;i<2;i++){const sgn=i===0?-1:1;
-    const A=[sgn*16.2,48.5,-6.6],B=[sgn*22.8,10,-5.2];
-    if(M.socks){const r=M.socks[i],h=(r[3]-r[1])*S,f=h/39;
-      tube(G,r,[A[0],A[1]-0.5,A[2]],[A[0]+(B[0]-A[0])*f,A[1]-0.5-h,A[2]+(B[2]-A[2])*f],'meiao',0,TUNE.sockExtra,1.3);
-      const rt=M.sockTop[i],ht=(rt[3]-rt[1])*S;tube(G,rt,[A[0]-0.3*sgn,A[1]+ht-0.8,A[2]],[A[0],A[1]-0.8,A[2]],'meiao-topo',0,TUNE.sockExtra+0.4,1.3);}
-    else{const g=grid(48,30,(s2,t)=>{const k=1-t,cx=A[0]+(B[0]-A[0])*k,cy=A[1]+(B[1]-A[1])*k,cz=A[2]+(B[2]-A[2])*k;
-      const rad=3.9+2.5*Math.exp(-(((t-0.72)/0.32)**2))+TUNE.sockExtra*0.7,phi=(s2-0.5)*2*Math.PI;
-      return {p:[cx+rad*Math.sin(phi),cy,cz+rad*1.3*Math.cos(phi)],uv:[s2,t]}});
-      const m=new THREE.Mesh(g,sockSolid);m.name='meiao-liso';G.add(m);}
+function buildKit(pieces){
+  for(const pc of pieces){
+    const m=new THREE.Mesh(pc.g,pc.out?(pc.part==='meiao'?sockSolid:panelSolid):matKit);
+    m.userData={out:pc.out,kit:true};parts[pc.part].add(m);
   }
 }
 let manData=null;
@@ -282,20 +235,18 @@ async function loadMannequin(){
 function buildMannequin(G){
   G.add(new THREE.Mesh(manData.body,skin));G.add(new THREE.Mesh(manData.shoes,shoeM));
 }
-function clear(g){while(g.children.length){const c=g.children.pop();c.traverse(o=>{if(o.geometry&&o.geometry!==manData?.body&&o.geometry!==manData?.shoes)o.geometry.dispose()});}}
+function clear(g){while(g.children.length)g.children.pop();}
 async function build(id){
   document.getElementById('load').style.display='grid';
-  cur=id;await Promise.all([getModelImg(id),loadMannequin()]);paintTexture();
+  cur=id;const [,,pieces]=await Promise.all([getModelImg(id),loadMannequin(),loadKit(id)]);paintTexture();
   Object.values(parts).forEach(clear);
-  const M=MODELS[id];
-  const dims=buildShirt(M,parts.camisa);buildShorts(M,parts.short);buildSocks(M,parts.meiao);buildMannequin(parts.manequim);['camisa','short','meiao'].forEach(k=>parts[k].position.z=ZC);
+  buildKit(pieces);buildMannequin(parts.manequim);
   applySock();
   document.getElementById('load').style.display='none';
 }
 function applySock(){
   const c=SOCKS[sockIdx][1]||MODELS[cur].sock;sockSolid.color.set(c);
-  parts.meiao.children.forEach(g=>{if(g.name==='meiao-liso')return;g.children.forEach(m=>m.material=SOCKS[sockIdx][1]?sockSolid:(m.material.side===THREE.BackSide?matIn:matOut));});
-  if(SOCKS[sockIdx][1])parts.meiao.children.forEach(g=>g.children.forEach(m=>m.material=sockSolid));
+  parts.meiao.children.forEach(m=>{m.material=(SOCKS[sockIdx][1]||m.userData.out)?sockSolid:matKit;});
 }
 
 // ---------- UI ----------
