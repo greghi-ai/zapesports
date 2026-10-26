@@ -106,7 +106,7 @@ import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 
 const S=165; // cm per UV unit
-const TUNE={yt:157,loose:1.06,sh:0.22,lean:4,armx:21.5,army:148,armdx:0.085,hipx:9.6,waist:104,legdx:0.1,shortExtra:2.2,sockExtra:1.3};window.TUNE=TUNE;
+const TUNE={yt:157,loose:1.06,sh:0.22,lean:4,armx:21.5,army:148,armdx:0.085,hipx:9.6,waist:104,legdx:0.1,shortExtra:2.2,sockExtra:1.8};window.TUNE=TUNE;
 // pieces in normalized texture coords [x0,y0,x1,y1] (y from top)
 const MODELS={
  m23:{name:'M-23 · Gola V',tex:'tex/m23.webp',
@@ -259,7 +259,7 @@ function buildShorts(M,G){
 }
 function buildSocks(M,G){
   for(let i=0;i<2;i++){const sgn=i===0?-1:1;
-    const A=[sgn*16.4,50,-6.5],B=[sgn*21.6,11,-5.2];
+    const A=[sgn*16.2,48.5,-6.6],B=[sgn*22.8,10,-5.2];
     if(M.socks){const r=M.socks[i],h=(r[3]-r[1])*S,f=h/39;
       tube(G,r,[A[0],A[1]-0.5,A[2]],[A[0]+(B[0]-A[0])*f,A[1]-0.5-h,A[2]+(B[2]-A[2])*f],'meiao',0,TUNE.sockExtra,1.3);
       const rt=M.sockTop[i],ht=(rt[3]-rt[1])*S;tube(G,rt,[A[0]-0.3*sgn,A[1]+ht-0.8,A[2]],[A[0],A[1]-0.8,A[2]],'meiao-topo',0,TUNE.sockExtra+0.4,1.3);}
