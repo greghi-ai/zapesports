@@ -272,7 +272,7 @@ async function loadMannequin(){
   const buf=await (await fetch('tex/manequim.bin')).arrayBuffer();const n=40184,nb=217113,ns=16674;
   let o=0;const P=new Float32Array(buf,o,n*3);o+=n*12;const N=new Float32Array(buf,o,n*3);o+=n*12;o+=n*8;
   const IB=new Uint16Array(buf,o,nb);o+=nb*2;const IS=new Uint16Array(buf,o,ns);
-  const mk=(I)=>{const g=new THREE.BufferGeometry();const pos=new Float32Array(P.length);for(let i=0;i<P.length;i++)pos[i]=P[i]/10;
+  const mk=(I)=>{const g=new THREE.BufferGeometry();const pos=new Float32Array(P.length);for(let i=0;i<P.length;i++)pos[i]=P[i];
     g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('normal',new THREE.BufferAttribute(N,3));g.setIndex(new THREE.BufferAttribute(I,1));return g};
   manData={body:mk(IB),shoes:mk(IS)};return manData;
 }
