@@ -136,9 +136,9 @@ const scene=new THREE.Scene();
 const pmrem=new THREE.PMREMGenerator(renderer);
 scene.environment=pmrem.fromScene(new RoomEnvironment(),0.04).texture;
 const cam=new THREE.PerspectiveCamera(28,1,1,2000);
-cam.position.set(0,105,330);
+cam.position.set(0,100,430);
 const ctl=new OrbitControls(cam,canvas);
-ctl.target.set(0,92,0);ctl.enablePan=false;ctl.enableDamping=true;ctl.minDistance=140;ctl.maxDistance=460;
+ctl.target.set(0,86,0);ctl.enablePan=false;ctl.enableDamping=true;ctl.minDistance=150;ctl.maxDistance=560;
 ctl.minPolarAngle=0.9;ctl.maxPolarAngle=1.95;ctl.autoRotateSpeed=3;
 const key=new THREE.DirectionalLight(0xffffff,1.6);key.position.set(120,220,200);scene.add(key);
 const rim=new THREE.DirectionalLight(0xffe2a8,0.9);rim.position.set(-180,160,-160);scene.add(rim);
@@ -189,7 +189,8 @@ const matIn=new THREE.MeshStandardMaterial({map:tex,color:0x6a6660,roughness:0.9
 const skin=new THREE.MeshStandardMaterial({color:0x7b7b7d,roughness:0.42,metalness:0.05,envMapIntensity:0.9});
 const shoeM=new THREE.MeshStandardMaterial({color:0x1b1b1d,roughness:0.5});
 const sockSolid=new THREE.MeshStandardMaterial({color:0x13254f,roughness:0.85});
-function dual(geo,group,name){const g=new THREE.Group();g.name=name;g.add(new THREE.Mesh(geo,matOut),new THREE.Mesh(geo,matIn));group.add(g);return g;}
+const matOutB=matOut.clone();matOutB.side=THREE.BackSide;const matInF=matIn.clone();matInF.side=THREE.FrontSide;
+function dual(geo,group,name,flip){const g=new THREE.Group();g.name=name;g.add(new THREE.Mesh(geo,flip?matOutB:matOut),new THREE.Mesh(geo,flip?matInF:matIn));group.add(g);return g;}
 
 const kit=new THREE.Group();scene.add(kit);
 const parts={camisa:new THREE.Group(),short:new THREE.Group(),meiao:new THREE.Group(),manequim:new THREE.Group()};
@@ -219,7 +220,7 @@ function buildShirt(M,G){
   // sleeves + cuffs
   M.sleeves.forEach((r,i)=>{
     const sgn=i===0?-1:1, h=(r[3]-r[1])*S;
-    const dir=new THREE.Vector3(0.42*sgn,-0.91,0).normalize();
+    const dir=new THREE.Vector3(0.30*sgn,-0.95,0).normalize();
     const P0=new THREE.Vector3(sgn*(a*0.86),Yt-5,0);
     const U=new THREE.Vector3(-dir.y,dir.x,0).multiplyScalar(sgn).normalize(), V=new THREE.Vector3(0,0,1);
     const geo=grid(64,40,(s,t)=>{
@@ -230,12 +231,12 @@ function buildShirt(M,G){
       const p=c.addScaledVector(U,Math.cos(psi)*rad).addScaledVector(V,Math.sin(psi)*rad*1.0);
       return {p:[p.x,p.y,p.z],uv:[ex[0]+s*(ex[1]-ex[0]),ty]};
     });
-    dual(geo,G,'manga');
+    dual(geo,G,'manga',true);
     const cr=M.cuffs[i],ch=(cr[3]-cr[1])*S;
     const ty1=r[3]-0.002, ex=rowExtent(cur,r,ty1)||[r[0],r[2]], rad=(ex[1]-ex[0])*S/(2*Math.PI)+0.9;
     const cg=grid(64,6,(s,t)=>{const psi=(s-0.5)*2*Math.PI*sgn,c=P0.clone().addScaledVector(dir,h-ch*0.7+(1-t)*ch);
       const p=c.addScaledVector(U,Math.cos(psi)*rad).addScaledVector(V,Math.sin(psi)*rad);return {p:[p.x,p.y,p.z],uv:[cr[0]+s*(cr[2]-cr[0]),cr[3]-t*(cr[3]-cr[1])]}});
-    dual(cg,G,'punho');
+    dual(cg,G,'punho',true);
   });
   return {a,b,Yb,Yt};
 }
@@ -260,16 +261,16 @@ function buildSocks(M,G){
 }
 function buildMannequin(G,dims){
   const add=(geo,pos,rot)=>{const m=new THREE.Mesh(geo,skin);m.position.copy(pos);if(rot)m.rotation.set(...rot);G.add(m);return m};
-  add(new THREE.CylinderGeometry(5.6,6.4,16,32),new THREE.Vector3(0,146,0));
-  add(new THREE.SphereGeometry(5.6,32,16,0,Math.PI*2,0,Math.PI/2),new THREE.Vector3(0,154,0));
+  add(new THREE.CylinderGeometry(5.2,6.2,10,32),new THREE.Vector3(0,143,0));
+  add(new THREE.SphereGeometry(5.2,32,16,0,Math.PI*2,0,Math.PI/2),new THREE.Vector3(0,148,0));
   // torso filler (visible only through openings)
   const t=add(new THREE.CylinderGeometry(dims.a*0.78,dims.a*0.7,62,32),new THREE.Vector3(0,108,0));t.scale.z=0.62;
   for(const sgn of [-1,1]){
-    const dir=new THREE.Vector3(0.42*sgn,-0.91,0).normalize(),P0=new THREE.Vector3(sgn*dims.a*0.86,dims.Yt-5,0);
-    const L=64,mid=P0.clone().addScaledVector(dir,L/2);
-    const arm=add(new THREE.CapsuleGeometry(4.3,L-8,8,24),mid);arm.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir);
-    const hand=add(new THREE.SphereGeometry(4.6,24,16),P0.clone().addScaledVector(dir,L+1));hand.scale.set(0.75,1.5,0.95);hand.quaternion.copy(arm.quaternion);
-    const leg=add(new THREE.CylinderGeometry(8.2,5.2,92,32),new THREE.Vector3(sgn*10.5,52,0));
+    const dir=new THREE.Vector3(0.30*sgn,-0.95,0).normalize(),P0=new THREE.Vector3(sgn*dims.a*0.86,dims.Yt-5,0);
+    const L=60,mid=P0.clone().addScaledVector(dir,L/2);
+    const arm=add(new THREE.CapsuleGeometry(3.6,L-8,8,24),mid);arm.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),dir);
+    const hand=add(new THREE.SphereGeometry(3.8,24,16),P0.clone().addScaledVector(dir,L+1));hand.scale.set(0.75,1.5,0.95);hand.quaternion.copy(arm.quaternion);
+    const leg=add(new THREE.CylinderGeometry(6.6,4.4,92,32),new THREE.Vector3(sgn*10.5,52,0));
     const shoe=new THREE.Mesh(new THREE.CapsuleGeometry(5.2,14,8,20),shoeM);shoe.rotation.x=Math.PI/2;shoe.scale.set(1,1,0.75);shoe.position.set(sgn*10.8,4.6,4.5);G.add(shoe);
   }
 }
