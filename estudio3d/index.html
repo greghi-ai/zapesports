@@ -189,7 +189,7 @@ const matOut=new THREE.MeshStandardMaterial({map:tex,roughness:0.78,metalness:0,
 const matIn=new THREE.MeshStandardMaterial({map:tex,color:0x6a6660,roughness:0.95,alphaTest:0.5,side:THREE.BackSide});
 const skin=new THREE.MeshStandardMaterial({color:0x76767a,roughness:0.38,metalness:0.05,envMapIntensity:1.0,polygonOffset:true,polygonOffsetFactor:2,polygonOffsetUnits:4});
 const shoeM=new THREE.MeshStandardMaterial({color:0x1b1b1d,roughness:0.5});
-const sockSolid=new THREE.MeshStandardMaterial({color:0x13254f,roughness:0.85});
+const sockSolid=new THREE.MeshStandardMaterial({color:0x13254f,roughness:0.85,side:THREE.DoubleSide});
 const matOutB=matOut.clone();matOutB.side=THREE.BackSide;const matInF=matIn.clone();matInF.side=THREE.FrontSide;
 function dual(geo,group,name,flip){const g=new THREE.Group();g.name=name;g.add(new THREE.Mesh(geo,flip?matOutB:matOut),new THREE.Mesh(geo,flip?matInF:matIn));group.add(g);return g;}
 
@@ -263,7 +263,10 @@ function buildSocks(M,G){
     if(M.socks){const r=M.socks[i],h=(r[3]-r[1])*S,f=h/39;
       tube(G,r,[A[0],A[1]-0.5,A[2]],[A[0]+(B[0]-A[0])*f,A[1]-0.5-h,A[2]+(B[2]-A[2])*f],'meiao',0,TUNE.sockExtra,1.3);
       const rt=M.sockTop[i],ht=(rt[3]-rt[1])*S;tube(G,rt,[A[0]-0.3*sgn,A[1]+ht-0.8,A[2]],[A[0],A[1]-0.8,A[2]],'meiao-topo',0,TUNE.sockExtra+0.4,1.3);}
-    else{const g=new THREE.CylinderGeometry(5.6,3.9,40,40,1,true);const m=new THREE.Mesh(g,sockSolid);m.position.set(sgn*19,30.5,-5.8);m.rotation.z=sgn*0.133;m.scale.z=1.3;m.name='meiao-liso';G.add(m);}
+    else{const g=grid(48,30,(s2,t)=>{const k=1-t,cx=A[0]+(B[0]-A[0])*k,cy=A[1]+(B[1]-A[1])*k,cz=A[2]+(B[2]-A[2])*k;
+      const rad=4.2+2.6*Math.sin(Math.PI*Math.min(1,0.25+t*0.9))*(t>0.2?1:0.6)+TUNE.sockExtra*0.6,phi=(s2-0.5)*2*Math.PI;
+      return {p:[cx+rad*Math.sin(phi),cy,cz+rad*1.3*Math.cos(phi)],uv:[s2,t]}});
+      const m=new THREE.Mesh(g,sockSolid);m.name='meiao-liso';G.add(m);}
   }
 }
 let manData=null;
