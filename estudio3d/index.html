@@ -22,7 +22,7 @@ aside.r{border-right:0;border-left:1px solid var(--line);display:flex;flex-direc
 .g h4 span{color:var(--gold)}
 .models{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .mdl{background:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:8px;cursor:pointer;text-align:left;color:inherit;font:inherit;transition:border-color .2s}
-.mdl img{width:100%;aspect-ratio:1;object-fit:cover;object-position:20% 30%;border-radius:2px;display:block;margin-bottom:6px;background:#1d1b17}
+.mdl img{width:100%;aspect-ratio:240/276;object-fit:cover;border-radius:2px;display:block;margin-bottom:6px;background:#1d1b17}
 .mdl b{display:block;font:800 17px 'Big Shoulders Display';letter-spacing:.5px}
 .mdl small{font:600 11px 'Barlow Condensed';letter-spacing:2px;color:var(--muted);text-transform:uppercase}
 .mdl.on{border-color:var(--gold)}
@@ -68,8 +68,6 @@ main{position:relative;background:radial-gradient(ellipse at 50% 45%,#24211b 0%,
 <aside>
   <div class="g"><h4>Modelo</h4>
     <div class="models">
-      <button class="mdl on" data-m="m23"><img src="tex/m23.webp" alt=""><b>M-23</b><small>Gola V</small></button>
-      <button class="mdl" data-m="campnou"><img src="tex/campnou.webp" alt=""><b>Camp Nou</b><small>Gola redonda</small></button>
     </div>
   </div>
   <div class="g"><h4>Cor da estampa <span id="corName">Original</span></h4><div class="sw" id="hue"></div></div>
@@ -109,22 +107,15 @@ const S=165; // cm per UV unit
 const TUNE={yt:157,loose:1.06,sh:0.22,lean:4,armx:21.5,army:148,armdx:0.085,hipx:9.6,waist:104,legdx:0.1,shortExtra:2.2,sockExtra:1.8};window.TUNE=TUNE;
 // pieces in normalized texture coords [x0,y0,x1,y1] (y from top)
 const MODELS={
- m23:{name:'M-23 · Gola V',tex:'tex/m23.webp',
-   body:{front:[[0.100,0.243,0.399,0.676]],back:[[0.415,0.231,0.715,0.672]]},
-   sleeves:[[0.130,0.013,0.380,0.149],[0.438,0.013,0.688,0.149]],
-   cuffs:[[0.163,0.154,0.348,0.178],[0.468,0.154,0.653,0.178]],
-   shorts:[[0.107,0.684,0.474,0.987],[0.512,0.684,0.880,0.987]],
-   socks:[[0.720,0.074,0.915,0.316],[0.725,0.394,0.920,0.637]],
-   sockTop:[[0.732,0.017,0.909,0.065],[0.738,0.337,0.915,0.385]],
-   crest:[0.307,0.356,0.034], sock:'#13254f'},
- campnou:{name:'Camp Nou · Gola redonda',tex:'tex/campnou.webp',
-   body:{front:[[0.117,0.330,0.171,0.648],[0.191,0.221,0.444,0.651],[0.462,0.335,0.515,0.646]],back:[[0.555,0.221,0.810,0.657]]},
-   sleeves:[[0.187,0.007,0.404,0.128],[0.532,0.007,0.749,0.128]],
-   cuffs:[[0.187,0.147,0.272,0.166],[0.669,0.147,0.754,0.166]],
-   shorts:[[0.057,0.691,0.424,0.993],[0.518,0.691,0.884,0.993]],
-   socks:null,sockTop:null,
-   crest:[0.358,0.333,0.032], sock:'#0d2fa0'}
+ m23:{name:'M-23',sub:'Gola V',crest:[0.305,0.356,0.032],sock:'#13254f'},
+ campnou:{name:'Camp Nou',sub:'Gola redonda',crest:[0.358,0.334,0.030],sock:'#e8e6e1'},
+ santiago:{name:'Santiago',sub:'Gola V',crest:[0.407,0.423,0.030],sock:'#13254f'},
+ retro:{name:'Dynamic Retrô',sub:'Gola V',crest:[0.400,0.383,0.030],sock:'#13254f'},
+ sobreposta:{name:'Dynamic Sobreposta',sub:'Gola V sobreposta',crest:[0.404,0.387,0.030],sock:'#13254f'},
+ canarinho:{name:'Canarinho',sub:'Gola polo · raglan',crest:[0.407,0.401,0.030],sock:'#13254f'},
+ fusion:{name:'Fusion',sub:'Gola V · raglan',crest:[0.657,0.381,0.030],sock:'#13254f'}
 };
+for(const k in MODELS)MODELS[k].tex=`tex/${k}.webp`;
 const HUES=[['Original',0,null],['Vermelho',150,'#c0141a'],['Roxo',75,'#5b2a9a'],['Verde',-70,'#1c8a31'],['Laranja',-160,'#d8661b'],['Grafite',0,'#3a3a3a']];
 const SOCKS=[['Do modelo',null],['Preto','#151515'],['Branco','#e8e6e1'],['Vermelho','#b5161c'],['Dourado','#c9971c'],['Azul','#13254f']];
 
@@ -206,7 +197,7 @@ async function loadKit(id){
   const [hdr,buf]=await Promise.all([fetch(`tex/kit_${id}.json`).then(r=>r.json()),fetch(`tex/kit_${id}.bin`).then(r=>r.arrayBuffer())]);
   let o=0;
   const pieces=hdr.map(h=>{
-    const P=new Int16Array(buf,o,h.nv*3);o+=h.nv*6;const X=new Uint16Array(buf,o,h.nv*2);o+=h.nv*4;const I=new Uint16Array(buf,o,h.ni);o+=h.ni*2;o=(o+3)&~3;
+    const P=new Int16Array(buf,o,h.nv*3);o+=h.nv*6;const X=new Uint16Array(buf,o,h.nv*2);o+=h.nv*4;const I=h.big?new Uint32Array(buf,o,h.ni):new Uint16Array(buf,o,h.ni);o+=h.ni*(h.big?4:2);o=(o+3)&~3;
     const pos=new Float32Array(h.nv*3);for(let i=0;i<pos.length;i++)pos[i]=P[i]/100;
     const uv=new Float32Array(h.nv*2);for(let i=0;i<uv.length;i++)uv[i]=X[i]/65535;
     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setIndex(new THREE.BufferAttribute(I,1));g.computeVertexNormals();
@@ -252,7 +243,7 @@ function applySock(){
 // ---------- UI ----------
 const $=s=>document.querySelector(s);
 function summary(){
-  $('#sModelo').textContent=MODELS[cur].name;$('#sCor').textContent=HUES[hueIdx][0];$('#corName').textContent=HUES[hueIdx][0];
+  $('#sModelo').textContent=MODELS[cur].name+' · '+MODELS[cur].sub;$('#sCor').textContent=HUES[hueIdx][0];$('#corName').textContent=HUES[hueIdx][0];
   $('#sMeiao').textContent=SOCKS[sockIdx][0];$('#meiaoName').textContent=SOCKS[sockIdx][0];$('#sEsc').textContent=crestImg?'Enviado':'Do modelo';
   const msg=`Olá, ZAPE! Montei meu uniforme no site:\n• Modelo: ${MODELS[cur].name}\n• Estampa: ${HUES[hueIdx][0]}\n• Meião: ${SOCKS[sockIdx][0]}\n• Escudo: ${crestImg?'vou enviar o arquivo':'do modelo'}\nQuero um orçamento.`;
   $('#wa').href='https://wa.me/?text='+encodeURIComponent(msg);
@@ -261,6 +252,7 @@ const hueBox=$('#hue');HUES.forEach((h,i)=>{const b=document.createElement('butt
   b.onclick=()=>{hueIdx=i;hueBox.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');paintTexture();summary();};hueBox.appendChild(b);});
 const sockBox=$('#sock');SOCKS.forEach((h,i)=>{const b=document.createElement('button');b.title=h[0];if(h[1])b.style.background=h[1];else b.className='orig';if(i===0)b.classList.add('on');
   b.onclick=()=>{sockIdx=i;sockBox.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');applySock();summary();};sockBox.appendChild(b);});
+{const box=document.querySelector('.models');for(const [k,m] of Object.entries(MODELS)){const b=document.createElement('button');b.className='mdl'+(k==='m23'?' on':'');b.dataset.m=k;b.innerHTML=`<img src="tex/th_${k}.jpg" alt="" loading="lazy"><b>${m.name}</b><small>${m.sub}</small>`;box.appendChild(b);}}
 document.querySelectorAll('.mdl').forEach(b=>b.onclick=async()=>{document.querySelectorAll('.mdl').forEach(x=>x.classList.remove('on'));b.classList.add('on');await build(b.dataset.m);summary();});
 document.querySelectorAll('#pecas .chip').forEach(b=>b.onclick=()=>{b.classList.toggle('on');parts[b.dataset.p].visible=b.classList.contains('on');});
 $('#crest').onchange=e=>{const f=e.target.files[0];if(!f)return;const i=new Image();i.onload=()=>{crestImg=i;paintTexture();summary();$('#upTxt').textContent=f.name.slice(0,22);};i.src=URL.createObjectURL(f);};
