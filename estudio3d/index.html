@@ -282,7 +282,7 @@ function fitText(g,text,maxW,maxH,weight=900,family="'Big Shoulders Display'"){
 }
 function drawLogo(g,item,cx,cy,hw,hh,color){
   if(item.img){const im=item.img,ar=im.width/im.height;let w=hw*2,h=w/ar;if(h>hh*2){h=hh*2;w=h*ar;}g.drawImage(im,cx-w/2,cy-h/2,w,h);}
-  else if(item.text){g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';fitText(g,item.text.toUpperCase(),hw*2,hh*1.6);g.fillText(item.text.toUpperCase(),cx,cy);}
+  else if(item.text){const t=item.text.toUpperCase();g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';const sz=fitText(g,t,hw*2,hh*1.6);g.strokeStyle=lum(color)>0.5?'rgba(20,20,20,.55)':'rgba(244,244,242,.35)';g.lineWidth=sz*0.06;g.strokeText(t,cx,cy);g.fillText(t,cx,cy);}
 }
 async function paintTexture(){
   const g=texCanvas.getContext('2d'),N=TEX,M=cache[st.model],S=M.meta.spots;
