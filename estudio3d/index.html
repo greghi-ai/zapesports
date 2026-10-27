@@ -295,9 +295,11 @@ async function paintTexture(){
     if(k.startsWith('manga')){drawLogo(g,it,cx*N,cy*N,r*N,r*N*0.55,ink);}
     else if(k==='costas'){const sp=S.numero;drawLogo(g,it,cx*N,(sp?sp[1]+0.135:cy)*N,0.075*N,0.028*N,ink);}
     else drawLogo(g,it,cx*N,cy*N,0.075*N,0.045*N,ink);}
-  if(S.numero){const [cx,cy]=S.numero;g.fillStyle=accent;g.textAlign='center';g.textBaseline='middle';
-    if(st.nome){fitText(g,st.nome.toUpperCase(),0.15*N,0.026*N,800);g.fillText(st.nome.toUpperCase(),cx*N,(cy-0.092)*N);}
-    if(st.numero){fitText(g,st.numero,0.17*N,0.125*N);g.fillText(st.numero,cx*N,cy*N);}}
+  if(S.numero&&(st.nome||st.numero)){const [cx,cy]=S.numero;const orig=st.pattern==='original';
+    const fill=orig?'#f4f4f2':contrast(st.c1),edge=orig?'#141414':(Math.abs(lum(st.c2)-lum(fill))>0.3?st.c2:(lum(fill)>0.5?'#141414':'#f4f4f2'));
+    g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';g.fillStyle=fill;g.strokeStyle=edge;
+    if(st.nome){const t=st.nome.toUpperCase();const sz=fitText(g,t,0.17*N,0.036*N,800);g.lineWidth=sz*0.14;g.strokeText(t,cx*N,(cy-0.098)*N);g.fillText(t,cx*N,(cy-0.098)*N);}
+    if(st.numero){const sz=fitText(g,st.numero,0.17*N,0.13*N);g.lineWidth=sz*0.07;g.strokeText(st.numero,cx*N,cy*N);g.fillText(st.numero,cx*N,cy*N);}}
   tex.needsUpdate=true;
   const custom=st.pattern!=='original';
   panelSolid.color.set(custom?st.c2:'#eeeeea');sockSolid.color.set(custom?st.cm:'#12224a');
