@@ -393,7 +393,7 @@ $('.slot[data-s=numero] input').oninput=e=>{e.target.value=e.target.value.replac
   file.onchange=async e=>{const f=e.target.files[0];if(!f)return;const im=removeBg(await readImage(f));st.sp[k]={img:im,file:f.name};ti.src=im.toDataURL();th.classList.add('on');txt.value='';file.value='';repaint();};
   s.querySelector('.x').onclick=()=>{st.sp[k]=null;txt.value='';th.classList.remove('on');repaint();};
   box.appendChild(s);}}
-$('#reset').onclick=()=>{Object.assign(st,DEF,{sync3:true,crest:null,nome:'',numero:'',font:0,sp:{}});$$('#t-escudo input[type=text],#spons input[type=text]').forEach(i=>i.value='');$$('.thumb').forEach(t=>t.classList.remove('on'));
+$('#reset').onclick=()=>{Object.assign(st,DEF,{sync3:true,crest:null,nome:'',numero:'',font:0,sp:{}});$$('#t-escudo input[type=text],#spons input[type=text]').forEach(i=>i.value='');$$('.thumb').forEach(t=>t.classList.remove('on'));$$('#fonts button').forEach((b,i)=>b.classList.toggle('on',i===0));
   $$('.pat').forEach(x=>x.classList.toggle('on',x.dataset.p===st.pattern));syncSwatches();refreshPats();repaint();};
 function summary(){
   const pat=PATTERNS.find(p=>p[0]===st.pattern)[1],orig=st.pattern==='original';
