@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZAPE Estúdio 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Bebas+Neue&family=Teko:wght@600&family=Graduate&family=Russo+One&family=Saira+Condensed:wght@800&display=swap" rel="stylesheet">
 <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js">
 <style>
 :root{--ink:#0c0b0a;--ink2:#151410;--ink3:#1d1b17;--line:#2a2722;--paper:#f2eee5;--gold:#daa520;--goldhi:#f0c95a;--muted:#a39d91;--dim:#6b665e}
@@ -61,6 +61,11 @@ aside.r{border-right:0;border-left:1px solid var(--line);display:flex;flex-direc
 .thumb{width:38px;height:38px;border-radius:3px;background:repeating-conic-gradient(#2a2722 0 25%,#1d1b17 0 50%) 0 0/10px 10px;display:none;place-items:center;flex:none}
 .thumb.on{display:grid}
 .thumb img{max-width:34px;max-height:34px}
+.fonts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fonts button{background:var(--ink);border:1px solid var(--line);border-radius:3px;padding:10px 4px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.fonts button b{font-size:30px;line-height:1;color:var(--paper);font-weight:normal}
+.fonts button small{font:600 10px 'Barlow Condensed';letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.fonts button.on{border-color:var(--gold)}.fonts button.on small{color:var(--gold)}
 .tog{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-top:10px;cursor:pointer}
 .tog input{accent-color:var(--gold)}
 main{position:relative;background:radial-gradient(ellipse at 50% 45%,#24211b 0%,#12110e 55%,var(--ink) 100%);min-height:0}
@@ -125,6 +130,8 @@ main{position:relative;background:radial-gradient(ellipse at 50% 45%,#24211b 0%,
     <div class="g"><h4>Nome e número</h4>
       <div class="slot" data-s="nome"><div class="top"><b>Nome</b><small>Costas</small></div><div class="row"><input type="text" maxlength="14" placeholder="Ex.: SILVA"></div></div>
       <div class="slot" data-s="numero"><div class="top"><b>Número</b><small>Costas</small></div><div class="row"><input type="text" maxlength="2" inputmode="numeric" placeholder="10"></div></div>
+      <div class="slot"><div class="top"><b>Fonte</b><small>Nome e número</small></div><div class="fonts" id="fonts"></div>
+        <p class="note" style="margin-top:10px">Quer outra fonte? Escolha "Outra fonte" e mande o arquivo ou o nome dela pelo WhatsApp.</p></div>
     </div>
   </section>
 
@@ -170,7 +177,9 @@ const COLORS=[['Preto','#141414'],['Branco','#f4f4f2'],['Cinza','#8a8a8a'],['Ver
 const PATTERNS=[['original','Original'],['liso','Liso'],['listras','Listras'],['faixa','Faixa'],['degrade','Degradê'],['diagonal','Diagonal'],['meio','Meio a meio'],['xadrez','Xadrez'],['ombro','Ombros']];
 const SLOTS=[['peito','Peito','Centro do peito'],['manga_dir','Manga direita','Patrocínio de manga'],['manga_esq','Manga esquerda','Patrocínio de manga'],['costas','Costas','Abaixo do número']];
 const DEF={pattern:'liso',c1:'#12224a',c2:'#daa520',c3:'#12224a',cs:'#12224a',cm:'#12224a'};
-const st={model:'m23',...DEF,sync3:true,crest:null,crestName:'',nome:'',numero:'',sp:{}};
+const st={model:'m23',...DEF,sync3:true,crest:null,crestName:'',nome:'',numero:'',font:0,sp:{}};
+const FONTS=[['Clássica',"'Big Shoulders Display'",900],['Bebas','\'Bebas Neue\'',400],['Teko','Teko',600],['College','Graduate',400],['Russo','\'Russo One\'',400],['Saira','\'Saira Condensed\'',800],['Outra fonte',null,0]];
+const numFont=()=>FONTS[st.font][1]?FONTS[st.font]:FONTS[0];
 const isMobile=matchMedia('(max-width:900px)').matches;
 const TEX=isMobile?2048:4096,BASE=2048;
 
@@ -299,8 +308,9 @@ async function paintTexture(){
   if(S.numero&&(st.nome||st.numero)){const [cx,cy]=S.numero;const orig=st.pattern==='original';
     const fill=orig?'#f4f4f2':contrast(st.c1),edge=orig?'#141414':(Math.abs(lum(st.c2)-lum(fill))>0.3?st.c2:(lum(fill)>0.5?'#141414':'#f4f4f2'));
     g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';g.fillStyle=fill;g.strokeStyle=edge;
-    if(st.nome){const t=st.nome.toUpperCase();const sz=fitText(g,t,0.17*N,0.036*N,800);g.lineWidth=sz*0.14;g.strokeText(t,cx*N,(cy-0.098)*N);g.fillText(t,cx*N,(cy-0.098)*N);}
-    if(st.numero){const sz=fitText(g,st.numero,0.17*N,0.13*N);g.lineWidth=sz*0.07;g.strokeText(st.numero,cx*N,cy*N);g.fillText(st.numero,cx*N,cy*N);}}
+    const nf=numFont();
+    if(st.nome){const t=st.nome.toUpperCase();const sz=fitText(g,t,0.17*N,0.036*N,nf[2]||800,nf[1]);g.lineWidth=sz*0.14;g.strokeText(t,cx*N,(cy-0.098)*N);g.fillText(t,cx*N,(cy-0.098)*N);}
+    if(st.numero){const sz=fitText(g,st.numero,0.17*N,0.13*N,nf[2],nf[1]);g.lineWidth=sz*0.07;g.strokeText(st.numero,cx*N,cy*N);g.fillText(st.numero,cx*N,cy*N);}}
   tex.needsUpdate=true;
   const custom=st.pattern!=='original';
   panelSolid.color.set(custom?st.c2:'#eeeeea');sockSolid.color.set(custom?st.cm:'#12224a');
@@ -371,6 +381,8 @@ function syncSwatches(){$$('.sw[data-k]').forEach(box=>{const k=box.dataset.k;bo
   inp.onchange=async e=>{const f=e.target.files[0];if(!f)return;raw=await readImage(f);st.crestName=f.name;apply();inp.value='';};
   $('#rmbg').onchange=apply;slot.querySelector('.x').onclick=()=>{raw=null;st.crestName='';apply();};}
 // name/number
+{const fb=$('#fonts');FONTS.forEach(([n,f,w],i)=>{const b=document.createElement('button');b.className=i===st.font?'on':'';b.innerHTML=f?`<b style="font-family:${f};font-weight:${w}">10</b><small>${n}</small>`:`<b style="font-family:Barlow;font-size:24px">+</b><small>${n}</small>`;
+  b.onclick=()=>{st.font=i;fb.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));repaint();};fb.appendChild(b);});}
 $('.slot[data-s=nome] input').oninput=e=>{st.nome=e.target.value.slice(0,14);repaint();};
 $('.slot[data-s=numero] input').oninput=e=>{e.target.value=e.target.value.replace(/\D/g,'');st.numero=e.target.value;repaint();};
 // sponsors
@@ -381,7 +393,7 @@ $('.slot[data-s=numero] input').oninput=e=>{e.target.value=e.target.value.replac
   file.onchange=async e=>{const f=e.target.files[0];if(!f)return;const im=removeBg(await readImage(f));st.sp[k]={img:im,file:f.name};ti.src=im.toDataURL();th.classList.add('on');txt.value='';file.value='';repaint();};
   s.querySelector('.x').onclick=()=>{st.sp[k]=null;txt.value='';th.classList.remove('on');repaint();};
   box.appendChild(s);}}
-$('#reset').onclick=()=>{Object.assign(st,DEF,{sync3:true,crest:null,nome:'',numero:'',sp:{}});$$('#t-escudo input[type=text],#spons input[type=text]').forEach(i=>i.value='');$$('.thumb').forEach(t=>t.classList.remove('on'));
+$('#reset').onclick=()=>{Object.assign(st,DEF,{sync3:true,crest:null,nome:'',numero:'',font:0,sp:{}});$$('#t-escudo input[type=text],#spons input[type=text]').forEach(i=>i.value='');$$('.thumb').forEach(t=>t.classList.remove('on'));
   $$('.pat').forEach(x=>x.classList.toggle('on',x.dataset.p===st.pattern));syncSwatches();refreshPats();repaint();};
 function summary(){
   const pat=PATTERNS.find(p=>p[0]===st.pattern)[1],orig=st.pattern==='original';
@@ -390,12 +402,12 @@ function summary(){
   if(!orig)rows.push(['Camisa',colorName(st.c1)+dot(st.c1)],['Detalhes',colorName(st.c2)+dot(st.c2)],['Mangas',colorName(st.c3)+dot(st.c3)],['Short',colorName(st.cs)+dot(st.cs)],['Meião',colorName(st.cm)+dot(st.cm)]);
   rows.push(['Escudo',st.crest?'Enviado':'—']);
   const sp=SLOTS.filter(([k])=>st.sp[k]).map(([k,n])=>`${n}: ${st.sp[k].text||'logo'}`);
-  rows.push(['Patrocínios',sp.length?sp.length+'':'—']);if(st.nome||st.numero)rows.push(['Nome / nº',`${st.nome||'—'} ${st.numero||''}`]);
+  rows.push(['Patrocínios',sp.length?sp.length+'':'—']);if(st.nome||st.numero)rows.push(['Nome / nº',`${st.nome||'—'} ${st.numero||''}`],['Fonte',FONTS[st.font][0]]);
   $('#sum').innerHTML=rows.map(r=>`<div>${r[0]}<b>${r[1]}</b></div>`).join('');
   $('#mName').textContent=MODELS[st.model].name;$('#pName').textContent=pat;
   const lines=[`Olá, ZAPE! Montei meu uniforme no site:`,`• Modelo: ${MODELS[st.model].name} (${MODELS[st.model].sub})`,`• Estampa: ${orig?'original do modelo':pat}`];
   if(!orig)lines.push(`• Cores: camisa ${colorName(st.c1)}, detalhes ${colorName(st.c2)}, mangas ${colorName(st.c3)}, short ${colorName(st.cs)}, meião ${colorName(st.cm)}`);
-  lines.push(`• Escudo: ${st.crest?'vou enviar o arquivo':'não'}`);if(sp.length)lines.push(`• Patrocínios: ${sp.join('; ')}`);if(st.nome||st.numero)lines.push(`• Nome/número: ${st.nome} ${st.numero}`);
+  lines.push(`• Escudo: ${st.crest?'vou enviar o arquivo':'não'}`);if(sp.length)lines.push(`• Patrocínios: ${sp.join('; ')}`);if(st.nome||st.numero)lines.push(`• Nome/número: ${st.nome} ${st.numero} (fonte: ${FONTS[st.font][1]?FONTS[st.font][0]:'outra, vou enviar aqui'})`);
   lines.push('Quero um orçamento.');
   $('#wa').href=`https://wa.me/${WA_NUMBER}?text=`+encodeURIComponent(lines.join('\n'));
 }
