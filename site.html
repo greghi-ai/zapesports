@@ -126,6 +126,19 @@ p{margin:0}
 .head .lede{max-width:46ch;color:var(--muted);font-size:17px}
 
 /* ---------- estúdio 3D ---------- */
+.s3d{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--panel)}
+.s3d-media{position:relative;display:block;background:#0c0b0a;aspect-ratio:4/5;overflow:hidden}
+.s3d-media video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s}
+.s3d-media:hover video{transform:scale(1.03)}
+.s3d-badge{position:absolute;left:18px;top:18px;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:30px;background:rgba(12,11,10,.75);border:1px solid rgba(218,165,32,.5);font:700 14px 'Barlow Condensed',sans-serif;letter-spacing:3px;color:#f2eee5}
+.s3d-badge i{width:8px;height:8px;border-radius:50%;background:#daa520;box-shadow:0 0 10px #daa520}
+.s3d-body{padding:clamp(24px,4vw,48px);display:flex;flex-direction:column;justify-content:center;gap:22px}
+.s3d-list{list-style:none;display:grid;gap:18px;margin:0;padding:0}
+.s3d-list li{display:grid;gap:4px;padding-left:18px;border-left:2px solid #daa520}
+.s3d-list b{font:800 22px 'Big Shoulders Display',sans-serif;text-transform:uppercase;letter-spacing:.5px}
+.s3d-list span{color:var(--muted,#a39d91);font-size:15px;line-height:1.5}
+.s3d-cta{align-self:flex-start}
+@media (max-width:900px){.s3d{grid-template-columns:1fr}.s3d-media{aspect-ratio:1/1}.s3d-cta{align-self:stretch;text-align:center}}
 .studio{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--panel)}
 @media (max-width:900px){.studio{grid-template-columns:1fr}}
 .stage{position:relative;isolation:isolate;min-height:640px;background:
@@ -579,10 +592,26 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
   <section class="section" id="monte">
     <div class="wrap">
       <div class="head">
-        <div><span class="eyebrow">Personalização</span><h2>Monte a camisa do seu time</h2></div>
-        <p class="lede">Escolha o recorte, pinte cada parte, coloque o escudo e o número. Toque na camisa para ver a frente e as costas.</p>
+        <div><span class="eyebrow">Estúdio 3D</span><h2>Monte a camisa do seu time</h2></div>
+        <p class="lede">Monte o uniforme completo em 3D, no manequim, antes de pedir. Gira, aproxima e vê de todos os lados.</p>
       </div>
-      <div class="studio">
+      <div class="s3d">
+        <a class="s3d-media" href="estudio3d/" aria-label="Abrir o estúdio 3D">
+          <video src="assets/video/estudio3d.mp4" poster="assets/video/estudio3d.jpg" autoplay muted loop playsinline preload="metadata"></video>
+          <span class="s3d-badge"><i></i>3D</span>
+        </a>
+        <div class="s3d-body">
+          <ul class="s3d-list">
+            <li><b>Estampas</b><span>Liso, listras, faixa, degradê, diagonal e mais.</span></li>
+            <li><b>Cores por peça</b><span>Camisa, detalhes, mangas, short e meião, cada um com a sua cor.</span></li>
+            <li><b>Escudo e patrocínios</b><span>Envie o escudo do time e os patrocinadores do peito, das mangas e das costas.</span></li>
+            <li><b>Nome e número</b><span>Escolha a fonte ou mande a sua pelo WhatsApp.</span></li>
+          </ul>
+          <a class="btn btn-gold s3d-cta" href="estudio3d/">Abrir o estúdio 3D</a>
+          <p class="note">Quando terminar, o resumo vai direto para o nosso WhatsApp.</p>
+        </div>
+      </div>
+      <div class="studio" style="display:none" aria-hidden="true">
         <div class="stage" id="stage">
           <div class="label"><span>Prévia</span><span>Toque para virar</span></div>
           <div class="views" role="group" aria-label="Vista">
@@ -769,7 +798,7 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
     <div class="menu-top"><span class="eyebrow">Para onde você quer ir?</span><button class="menu-x" type="button" data-mclose aria-label="Fechar menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <nav class="menu-grid" aria-label="Seções">
       <a href="#arara" style="--img:url(assets/menu/arara.jpg)"><span class="n">01</span><b>Arara</b><small>Passe pelas peças</small></a>
-      <a href="#monte" style="--img:url(assets/menu/monte.jpg)"><span class="n">02</span><b>Monte a sua</b><small>Pinte a camisa do seu time</small></a>
+      <a href="#monte" style="--img:url(assets/menu/monte.jpg)"><span class="n">02</span><b>Monte a sua</b><small>Estúdio 3D do uniforme</small></a>
       <a href="#modelos" style="--img:url(assets/menu/modelos.jpg)"><span class="n">03</span><b>Modelos</b><small>Catálogo 2026</small></a>
       <a href="#como-funciona" style="--img:url(assets/menu/como.jpg)"><span class="n">04</span><b>Como funciona</b><small>Do pedido à entrega</small></a>
     </nav>
@@ -1052,7 +1081,7 @@ function openFit(id, from){
     if (t.id==='meiao') st.meiao = t.checked; if (t.id==='qty') st.qty = Math.max(1, Math.min(999, parseInt(t.value)||1)); });
   root.querySelectorAll('[data-q]').forEach(b => b.addEventListener('click', () => { st.qty = Math.max(1, Math.min(999, st.qty + (+b.dataset.q))); $('#qty').value = st.qty; }));
   root.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeLayer));
-  $('#go3d')?.addEventListener('click', () => { lastFocus = null; closeLayer(); Studio.useTemplate(m.id); document.getElementById('monte').scrollIntoView({behavior: reduce?'auto':'smooth'}); });
+  $('#go3d')?.addEventListener('click', () => { location.href = 'estudio3d/'; });
   $('#fitForm').addEventListener('submit', e => { e.preventDefault(); closeLayer();
     addToCart({type:'model', id:m.id, name:m.name, piece:st.piece, escudo:escLabel(st.escudo), fabric:FABRIC[st.fabric][0], qty:st.qty, meiao:st.meiao}, m.name); });
   $('.close').focus();
