@@ -2,7 +2,6 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<script src="../assets/gate.js" data-home="../"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ZAPE Estúdio 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -283,7 +282,7 @@ function fitText(g,text,maxW,maxH,weight=900,family="'Big Shoulders Display'"){
 }
 function drawLogo(g,item,cx,cy,hw,hh,color){
   if(item.img){const im=item.img,ar=im.width/im.height;let w=hw*2,h=w/ar;if(h>hh*2){h=hh*2;w=h*ar;}g.drawImage(im,cx-w/2,cy-h/2,w,h);}
-  else if(item.text){const t=item.text.toUpperCase();g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';const sz=fitText(g,t,hw*2,hh*1.6);g.strokeStyle=lum(color)>0.5?'rgba(20,20,20,.55)':'rgba(244,244,242,.35)';g.lineWidth=sz*0.06;g.strokeText(t,cx,cy);g.fillText(t,cx,cy);}
+  else if(item.text){const t=item.text.toUpperCase();g.fillStyle=color;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';const sz=fitText(g,t,hw*2,hh*1.75);g.strokeStyle=lum(color)>0.5?'rgba(20,20,20,.55)':'rgba(244,244,242,.35)';g.lineWidth=sz*0.06;g.strokeText(t,cx,cy);g.fillText(t,cx,cy);}
 }
 async function paintTexture(){
   const g=texCanvas.getContext('2d'),N=TEX,M=cache[st.model],S=M.meta.spots;
@@ -291,11 +290,12 @@ async function paintTexture(){
   if(st.pattern==='original'){g.drawImage(await getOriginal(st.model),0,0,N,N);}
   else{paintBase();g.imageSmoothingEnabled=true;g.drawImage(baseCanvas,0,0,N,N);}
   const ink=contrast(st.pattern==='original'?'#12224a':st.c1),accent=st.pattern==='original'?'#f4f4f2':(lum(st.c2)<0.15&&lum(st.c1)<0.15?'#f4f4f2':st.c2);
-  if(st.crest&&S.crest){const [cx,cy,r]=S.crest;drawLogo(g,{img:st.crest},cx*N,cy*N,r*N,r*N);}
+  // tamanhos padronizados (proporção de uma camisa real: escudo ~8 cm, patrocínio do peito ~22x7 cm, manga ~7x5 cm, costas ~20x5 cm)
+  if(st.crest&&S.crest){const [cx,cy]=S.crest;drawLogo(g,{img:st.crest},cx*N,cy*N,0.022*N,0.022*N);}
   for(const [k] of SLOTS){const it=st.sp[k];if(!it||!S[k])continue;const [cx,cy,r]=S[k];
-    if(k.startsWith('manga')){drawLogo(g,it,cx*N,cy*N,r*N,r*N*0.55,ink);}
-    else if(k==='costas'){const sp=S.numero;drawLogo(g,it,cx*N,(sp?sp[1]+0.135:cy)*N,0.075*N,0.028*N,ink);}
-    else drawLogo(g,it,cx*N,cy*N,0.075*N,0.045*N,ink);}
+    if(k.startsWith('manga')){drawLogo(g,it,cx*N,cy*N,0.02*N,0.014*N,ink);}
+    else if(k==='costas'){const sp=S.numero;drawLogo(g,it,cx*N,(sp?sp[1]+0.13:cy)*N,0.055*N,0.014*N,ink);}
+    else drawLogo(g,it,cx*N,cy*N,0.06*N,0.019*N,ink);}
   if(S.numero&&(st.nome||st.numero)){const [cx,cy]=S.numero;const orig=st.pattern==='original';
     const fill=orig?'#f4f4f2':contrast(st.c1),edge=orig?'#141414':(Math.abs(lum(st.c2)-lum(fill))>0.3?st.c2:(lum(fill)>0.5?'#141414':'#f4f4f2'));
     g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';g.fillStyle=fill;g.strokeStyle=edge;
