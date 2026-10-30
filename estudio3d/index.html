@@ -383,7 +383,7 @@ renderEsts();
 function renderEsts(){const box=$('#ests');box.innerHTML='';const list=ESTAMPAS.filter(e=>e.model===st.model);$('#estG').classList.toggle('none',!list.length);
   list.forEach(e=>{const b=document.createElement('button');b.className='pat est'+(st.pattern==='est:'+e.id?' on':'');b.dataset.p='est:'+e.id;b.innerHTML=`<img src="tex/est/th_${e.model}_${e.id}.jpg" alt="">${e.name}`;
     b.onclick=()=>{st.pattern='est:'+e.id;Object.assign(st,{c1:e.c1,c2:e.c2,c3:e.c3||e.c1,cs:e.cs||e.c1,cm:e.cm||e.c1,sync3:true});$$('.pat').forEach(x=>x.classList.toggle('on',x===b));syncSwatches();refreshPats();repaint();};box.appendChild(b);});}
-function refreshPats(){$$('.pat').forEach(b=>drawPatPreview(b.querySelector('canvas'),b.dataset.p));}
+function refreshPats(){$$('#pats .pat').forEach(b=>drawPatPreview(b.querySelector('canvas'),b.dataset.p));}
 // swatches
 function colorName(h){const f=COLORS.find(c=>c[1].toLowerCase()===h.toLowerCase());return f?f[0]:h.toUpperCase();}
 $$('.sw[data-k]').forEach(box=>{const k=box.dataset.k;
