@@ -38,6 +38,8 @@ aside.r{border-right:0;border-left:1px solid var(--line);display:flex;flex-direc
 .pat{background:var(--ink2);border:1px solid var(--line);border-radius:4px;padding:6px;cursor:pointer;display:flex;flex-direction:column;gap:6px;align-items:center;font:600 11px 'Barlow Condensed';letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
 .pat canvas{width:100%;aspect-ratio:1.2;border-radius:2px;display:block}
 .pat.on{border-color:var(--gold);color:var(--paper)}
+.est img{width:100%;aspect-ratio:.8;object-fit:cover;border-radius:2px;display:block}
+#estG:empty,#estG.none{display:none}
 .sw{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
 .sw button{width:28px;height:28px;border-radius:50%;border:2px solid var(--ink);outline:1px solid #3a3630;cursor:pointer;padding:0}
 .sw button.on{outline:2px solid var(--gold)}
@@ -111,6 +113,7 @@ main{position:relative;background:radial-gradient(ellipse at 50% 45%,#24211b 0%,
   </section>
 
   <section class="pane" id="t-cores">
+    <div class="g" id="estG"><h4>Estampas ZAPE</h4><div class="pats" id="ests"></div></div>
     <div class="g"><h4>Estampa <span id="pName"></span></h4><div class="pats" id="pats"></div></div>
     <div class="g"><h4>Cor da camisa <span id="n-c1"></span></h4><div class="sw" data-k="c1"></div></div>
     <div class="g"><h4>Cor dos detalhes <span id="n-c2"></span></h4><div class="sw" data-k="c2"></div></div>
@@ -175,6 +178,12 @@ const MODELS={
 };
 const COLORS=[['Preto','#141414'],['Branco','#f4f4f2'],['Cinza','#8a8a8a'],['Vermelho','#c8102e'],['Vinho','#6d1a2b'],['Laranja','#ee6a1b'],['Amarelo','#f6c800'],['Dourado','#daa520'],['Verde','#0f7a3a'],['Verde-limão','#79d12b'],['Celeste','#5ab0e8'],['Azul-royal','#1f4fd6'],['Marinho','#12224a'],['Roxo','#5b2a9a'],['Rosa','#e0479e']];
 const PATTERNS=[['original','Original'],['liso','Liso'],['listras','Listras'],['faixa','Faixa'],['degrade','Degradê'],['diagonal','Diagonal'],['meio','Meio a meio'],['xadrez','Xadrez'],['ombro','Ombros']];
+// estampas prontas do designer: camada base (cor 1) + detalhe (cor 2), uma máscara por estampa/molde
+const ESTAMPAS=[
+ {id:'zape01',model:'m23',name:'ZAPE 01',c1:'#025c16',c2:'#62c91c'}
+];
+const isEst=p=>p.startsWith('est:'),estOf=p=>ESTAMPAS.find(e=>'est:'+e.id===p);
+const patName=p=>isEst(p)?(estOf(p)||{}).name:PATTERNS.find(x=>x[0]===p)[1];
 const SLOTS=[['peito','Peito','Centro do peito'],['manga_dir','Manga direita','Patrocínio de manga'],['manga_esq','Manga esquerda','Patrocínio de manga'],['costas','Costas','Abaixo do número']];
 const DEF={pattern:'liso',c1:'#12224a',c2:'#daa520',c3:'#12224a',cs:'#12224a',cm:'#12224a'};
 const st={model:'m23',...DEF,sync3:true,crest:null,crestName:'',nome:'',numero:'',font:0,sp:{}};
@@ -238,6 +247,10 @@ async function loadMannequin(){
   const mk=I=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(P,3));g.setAttribute('normal',new THREE.BufferAttribute(N,3));g.setIndex(new THREE.BufferAttribute(I,1));return g};
   manData={body:mk(IB),shoes:mk(IS)};return manData;
 }
+const estMask={};
+async function getEst(e){const k=e.model+'_'+e.id;if(estMask[k])return estMask[k];const im=await loadImg(`tex/est/${k}.png`);
+  const c=document.createElement('canvas');c.width=c.height=BASE;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(im,0,0,BASE,BASE);
+  const d=x.getImageData(0,0,BASE,BASE).data,a=new Uint8Array(BASE*BASE);for(let i=0;i<a.length;i++)a[i]=d[i*4];estMask[k]=a;return a;}
 const origImg={};
 async function getOriginal(id){if(!origImg[id])origImg[id]=await loadImg(`tex/${id}.webp`);return origImg[id];}
 
@@ -261,7 +274,7 @@ function patternValue(p,x,y){ // x,y in 0..1 inside a body piece; return 0 (c1) 
     default:return 0;
   }
 }
-function paintBase(){
+function paintBase(D){
   const M=cache[st.model];const {mask,meta}=M;const P=meta.pieces;
   const img=bctx.createImageData(BASE,BASE),d=img.data,nz=getNoise();
   const c1=hex(st.c1),c2=hex(st.c2),c3=hex(st.c3),cs=hex(st.cs),cm=hex(st.cm);
@@ -272,13 +285,14 @@ function paintBase(){
       const k=y*BASE+x,id=mask[k];let col=c1,shade=1;
       if(id){const p=P[id-1];
         switch(p.role){
-          case 'body':{const b=box[id-1];let u=(x-b[0])/b[2],v=(y-b[1])/b[3];if(b[5]<60)u=1-u;const t=patternValue(st.pattern,u,v);
+          case 'body':if(D){col=c1;break;}{const b=box[id-1];let u=(x-b[0])/b[2],v=(y-b[1])/b[3];if(b[5]<60)u=1-u;const t=patternValue(st.pattern,u,v);
             col=t<=0?c1:t>=1?c2:[c1[0]+(c2[0]-c1[0])*t,c1[1]+(c2[1]-c1[1])*t,c1[2]+(c2[2]-c1[2])*t];break;}
           case 'sleeve':col=st.pattern==='ombro'?c2:c3;break;
           case 'trim':col=c2;break;
           case 'short':col=cs;break;
           case 'sock':col=cm;break;
         }
+        if(D){const t=D[k]/255;if(p.role==='trim')col=c1;if(t>0)col=[col[0]+(c2[0]-col[0])*t,col[1]+(c2[1]-col[1])*t,col[2]+(c2[2]-col[2])*t];}
       }
       shade=0.965+0.05*nz[k];
       const o=k*4;d[o]=col[0]*shade;d[o+1]=col[1]*shade;d[o+2]=col[2]*shade;d[o+3]=255;
@@ -297,7 +311,7 @@ async function paintTexture(){
   const g=texCanvas.getContext('2d'),N=TEX,M=cache[st.model],S=M.meta.spots;
   g.clearRect(0,0,N,N);
   if(st.pattern==='original'){g.drawImage(await getOriginal(st.model),0,0,N,N);}
-  else{paintBase();g.imageSmoothingEnabled=true;g.drawImage(baseCanvas,0,0,N,N);}
+  else{const e=isEst(st.pattern)&&estOf(st.pattern);paintBase(e?await getEst(e):null);g.imageSmoothingEnabled=true;g.drawImage(baseCanvas,0,0,N,N);}
   const ink=contrast(st.pattern==='original'?'#12224a':st.c1),accent=st.pattern==='original'?'#f4f4f2':(lum(st.c2)<0.15&&lum(st.c1)<0.15?'#f4f4f2':st.c2);
   // tamanhos padronizados (proporção de uma camisa real: escudo ~8 cm, patrocínio do peito ~22x7 cm, manga ~7x5 cm, costas ~20x5 cm)
   if(st.crest&&S.crest){const [cx,cy]=S.crest;drawLogo(g,{img:st.crest},cx*N,cy*N,0.022*N,0.022*N);}
@@ -322,7 +336,8 @@ let paintQueued=false;function repaint(){if(paintQueued)return;paintQueued=true;
 function clear(g){while(g.children.length)g.children.pop();}
 async function build(id){
   const L=document.getElementById('load');L.style.display='grid';
-  st.model=id;const [M]=await Promise.all([loadModel(id),loadMannequin()]);
+  st.model=id;if(isEst(st.pattern)&&(estOf(st.pattern)||{}).model!==id){st.pattern='liso';$$('.pat').forEach(x=>x.classList.toggle('on',x.dataset.p==='liso'));}renderEsts();
+  const [M]=await Promise.all([loadModel(id),loadMannequin()]);
   await paintTexture();
   Object.values(parts).forEach(clear);
   for(const pc of M.pieces){let mat=matKit;if(pc.role==='out')mat=pc.part==='meiao'?sockSolid:panelSolid;parts[pc.part].add(new THREE.Mesh(pc.g,mat));}
@@ -364,6 +379,10 @@ function drawPatPreview(cv,p){const g=cv.getContext('2d'),W=cv.width,H=cv.height
 const patBox=$('#pats');
 PATTERNS.forEach(([k,n])=>{const b=document.createElement('button');b.className='pat'+(k===st.pattern?' on':'');b.dataset.p=k;const cv=document.createElement('canvas');cv.width=72;cv.height=60;b.append(cv,document.createTextNode(n));
   b.onclick=()=>{st.pattern=k;$$('.pat').forEach(x=>x.classList.toggle('on',x===b));repaint();};patBox.appendChild(b);});
+renderEsts();
+function renderEsts(){const box=$('#ests');box.innerHTML='';const list=ESTAMPAS.filter(e=>e.model===st.model);$('#estG').classList.toggle('none',!list.length);
+  list.forEach(e=>{const b=document.createElement('button');b.className='pat est'+(st.pattern==='est:'+e.id?' on':'');b.dataset.p='est:'+e.id;b.innerHTML=`<img src="tex/est/th_${e.model}_${e.id}.jpg" alt="">${e.name}`;
+    b.onclick=()=>{st.pattern='est:'+e.id;Object.assign(st,{c1:e.c1,c2:e.c2,c3:e.c3||e.c1,cs:e.cs||e.c1,cm:e.cm||e.c1,sync3:true});$$('.pat').forEach(x=>x.classList.toggle('on',x===b));syncSwatches();refreshPats();repaint();};box.appendChild(b);});}
 function refreshPats(){$$('.pat').forEach(b=>drawPatPreview(b.querySelector('canvas'),b.dataset.p));}
 // swatches
 function colorName(h){const f=COLORS.find(c=>c[1].toLowerCase()===h.toLowerCase());return f?f[0]:h.toUpperCase();}
@@ -396,7 +415,7 @@ $('.slot[data-s=numero] input').oninput=e=>{e.target.value=e.target.value.replac
 $('#reset').onclick=()=>{Object.assign(st,DEF,{sync3:true,crest:null,nome:'',numero:'',font:0,sp:{}});$$('#t-escudo input[type=text],#spons input[type=text]').forEach(i=>i.value='');$$('.thumb').forEach(t=>t.classList.remove('on'));$$('#fonts button').forEach((b,i)=>b.classList.toggle('on',i===0));
   $$('.pat').forEach(x=>x.classList.toggle('on',x.dataset.p===st.pattern));syncSwatches();refreshPats();repaint();};
 function summary(){
-  const pat=PATTERNS.find(p=>p[0]===st.pattern)[1],orig=st.pattern==='original';
+  const pat=patName(st.pattern),orig=st.pattern==='original';
   const dot=c=>`<i style="background:${c}"></i>`;
   const rows=[['Modelo',`${MODELS[st.model].name} · ${MODELS[st.model].sub}`],['Estampa',orig?'Original do modelo':pat]];
   if(!orig)rows.push(['Camisa',colorName(st.c1)+dot(st.c1)],['Detalhes',colorName(st.c2)+dot(st.c2)],['Mangas',colorName(st.c3)+dot(st.c3)],['Short',colorName(st.cs)+dot(st.cs)],['Meião',colorName(st.cm)+dot(st.cm)]);
