@@ -47,7 +47,7 @@ function layout(){
   const head = document.querySelector('header'); const hh = head ? head.offsetHeight : 66;
   pin.style.top = hh + 'px'; pin.style.height = `calc(100svh - ${hh}px)`;
   const S = pin.clientHeight - 44, W = pin.clientWidth, mob = W < 820;
-  const h = Math.min(S*(mob ? .52 : .55), W*(mob ? 1.05 : .4)), w = h*SW/SH, railY = S*(mob ? .22 : .25), hk = h*.1, top = railY + hk - NY/SH*h;
+  const h = Math.min(S*(mob ? .52 : .55), W*(mob ? .8 : .4)), w = h*SW/SH, railY = S*(mob ? .22 : .25), hk = h*.1, top = railY + hk - NY/SH*h;
   const gap = w*(mob ? .3 : .24), gGap = w*(mob ? .75 : .7), side = mob ? W*.5 - w*.5 : w*.4;
   G = {...G, S, W, h, w, railY, hk, top, gap, mob};
   track.querySelectorAll('.v-rail,.v-lbl').forEach(e => e.remove());
@@ -101,7 +101,7 @@ function goto(p){ const span = root.offsetHeight - pin.offsetHeight, top = root.
 let open = null, busy = false, cur = BACK, R = null;
 const show = document.createElement('div'); show.className = 'v-show'; show.innerHTML = `<canvas></canvas>${HOOK}<span class="v-tag"></span><span class="v-spin">Arraste para girar</span>`; pin.appendChild(show); show.style.display = 'none';
 const scv = show.querySelector('canvas');
-function spot(){ const S = G.S, W = G.W; if (G.mob){ const h = Math.min(S*.5, W*1.15), w = h*SW/SH; return {x:(W - w)/2, y:S*.1, w, h}; }
+function spot(){ const S = G.S, W = G.W; if (G.mob){ const h = Math.min(S*.5, W*.95), w = h*SW/SH; return {x:(W - w)/2, y:S*.1, w, h}; }
   const h = S*.78, w = h*SW/SH; return {x:Math.max(16, W*.36 - w/2), y:S*.12, w, h}; }
 let drawId = 0;
 async function drawShow(it, r, yaw){ R = r; Object.assign(show.style, {left:r.x+'px', top:r.y+'px', width:r.w+'px', height:r.h+'px'});
