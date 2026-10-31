@@ -497,7 +497,7 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 
 
 </style>
-<link rel="stylesheet" href="assets/vestiario.css?v=3">
+<link rel="stylesheet" href="assets/vestiario.css?v=4">
 
 <header class="top">
   <div class="wrap">
@@ -510,26 +510,26 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 <main>
   <span id="arara"></span>
   <section class="vest" id="vest" aria-label="Vestiário ZAPE: arara de camisas">
+   <div class="v-pin">
     <div class="v-wall" aria-hidden="true"></div>
-    <div class="v-stage"><div class="v-rail" aria-hidden="true"></div><div class="v-track" role="list"></div></div>
-    <div class="v-bench" aria-hidden="true"></div>
-    <div class="v-props" aria-hidden="true"></div>
+    <div class="v-stage"><div class="v-track" role="list"></div></div>
     <div class="v-dim" aria-hidden="true"></div>
     <div class="v-top">
       <div class="v-ttl"><span class="eyebrow">Vestiário ZAPE · Catálogo 2026</span><b>Escolha a <em>sua</em> camisa</b></div>
       <div class="v-pills" role="group" aria-label="Filtrar por gola"></div>
     </div>
-    <div class="v-foot"><span>Arraste a arara · toque para abrir</span><a class="btn btn-gold" href="estudio3d/">Monte a sua</a></div>
+    <div class="v-foot"><span>Role para passar a arara · toque para abrir</span><div class="v-prog"><i></i></div><a class="btn btn-gold" href="estudio3d/">Monte a sua</a></div>
     <div class="v-card" role="dialog" aria-label="Ficha do modelo">
       <button class="v-x" type="button" aria-label="Fechar">×</button>
       <div class="v-chips">Ficha <b class="v-grp"></b></div>
       <div class="v-head"><span class="v-num"></span><div><h3></h3><p class="v-sub"></p></div></div>
       <dl><dt>Gola</dt><dd class="v-gola"></dd><dt>Tecido</dt><dd>Dry fit liso, colmeia ou 3D</dd><dt>Escudo</dt><dd>Sublimado, bordado, emborrachado</dd><dt>Tamanhos</dt><dd>Infantil ao GG</dd></dl>
       <div class="v-pers"><label>Nome<input id="vNome" maxlength="14" placeholder="SEU NOME" autocomplete="off"></label><label>Número<input id="vNum" maxlength="2" inputmode="numeric" placeholder="10" autocomplete="off"></label></div>
-      <div class="v-row"><a class="btn btn-gold" data-go href="estudio3d/">Personalizar</a><button class="v-ic" type="button" data-flip aria-label="Ver frente e costas" title="Girar">⟲</button><button class="v-ic" type="button" data-p aria-label="Modelo anterior">‹</button><button class="v-ic" type="button" data-n aria-label="Próximo modelo">›</button></div>
-      <p class="v-note">Tudo sob encomenda, nas cores e com o escudo do seu time.</p>
+      <div class="v-row"><a class="btn btn-gold" data-go href="estudio3d/">Personalizar</a><button class="v-ic" type="button" data-flip aria-label="Ver frente e costas" title="Ver frente / costas">⟲</button><button class="v-ic" type="button" data-p aria-label="Modelo anterior">‹</button><button class="v-ic" type="button" data-n aria-label="Próximo modelo">›</button></div>
+      <p class="v-note">Arraste a camisa para girar. Tudo sob encomenda, nas cores e com o escudo do seu time.</p>
     </div>
     <div class="v-ticker" aria-hidden="true"><div></div></div>
+   </div>
   </section>
   <section class="showroom" id="arara-antiga" hidden aria-label="Arara virtual">
     <div class="sign">
@@ -1577,4 +1577,4 @@ const Studio = (() => {
 })();
 })();
 </script>
-<script src="assets/vestiario.js?v=3" defer></script>
+<script src="assets/vestiario.js?v=4" defer></script>

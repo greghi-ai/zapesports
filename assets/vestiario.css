@@ -1,62 +1,55 @@
 /* ===== Vestiário ZAPE: arara com as camisas reais do CLO ===== */
-.vest{--rail:#c9a24a;position:relative;height:clamp(600px,calc(100svh - 66px),920px);overflow:hidden;background:#0b0907;isolation:isolate;user-select:none;-webkit-user-select:none;color:#f2eee5}
+.vest{position:relative;height:calc(100svh + 150vh);background:#070605;color:#f2eee5}
 .vest *{box-sizing:border-box}
-/* parede de ripas de madeira + nichos (armários) */
-.vest .v-wall{position:absolute;top:0;bottom:0;left:0;z-index:0;will-change:transform}
-.vest .v-bay{position:absolute;top:0;bottom:0;border-left:14px solid #0d0a08;border-right:14px solid #0d0a08;
-  background:
-   linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 62%,rgba(0,0,0,.7) 100%),
-   repeating-linear-gradient(90deg,#211812 0 34px,#18120d 34px 36px,#2a1f17 36px 37px);
-  box-shadow:inset 18px 0 30px rgba(0,0,0,.55),inset -18px 0 30px rgba(0,0,0,.55)}
-.vest .v-bay::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;background:radial-gradient(70% 90% at 50% 0%,rgba(255,213,140,.20),rgba(255,213,140,0) 70%)}
-.vest .v-bay .v-lbl{position:absolute;top:13%;left:50%;transform:translateX(-50%);white-space:nowrap;font:600 12px var(--f-label);letter-spacing:.3em;text-transform:uppercase;color:rgba(242,238,229,.7);display:flex;align-items:center;gap:10px}
-.vest .v-bay .v-lbl::before{content:"";width:22px;height:1px;background:var(--gold)}
-.vest .v-bay .v-lbl b{color:var(--gold);font-weight:700}
-.vest .v-post{position:absolute;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#e9c770,#a77b24 40%,#7a5716);box-shadow:0 0 18px rgba(218,165,32,.25)}
-/* trilho dourado */
-.vest .v-rail{position:absolute;left:0;right:0;height:9px;z-index:4;border-radius:5px;background:linear-gradient(180deg,#fff0c2 0%,#e2bb5b 28%,#9b7120 62%,#d9b25a 85%,#7d5a18 100%);box-shadow:0 8px 16px rgba(0,0,0,.55)}
-/* banco e chão */
-.vest .v-bench{position:absolute;left:0;right:0;bottom:44px;height:12%;z-index:5;background:linear-gradient(180deg,#1e1915 0%,#141110 40%,#0c0a09 100%);border-top:1px solid #3a2f25}
-.vest .v-bench::before{content:"";position:absolute;left:0;right:0;top:-2px;height:3px;background:linear-gradient(90deg,rgba(218,165,32,0),#f0c95a 15%,#daa520 50%,#f0c95a 85%,rgba(218,165,32,0));box-shadow:0 0 20px 3px rgba(218,165,32,.4)}
-.vest .v-bench::after{content:"";position:absolute;left:0;right:0;top:0;height:100%;background:radial-gradient(50% 120% at 50% 0%,rgba(218,165,32,.10),rgba(218,165,32,0) 70%)}
-.vest .v-props{position:absolute;left:0;bottom:calc(44px + 12% - 8px);height:0;z-index:6;pointer-events:none;will-change:transform}
-.vest .v-props svg{position:absolute;bottom:0;filter:drop-shadow(0 12px 14px rgba(0,0,0,.65))}
-/* faixa dourada correndo no rodapé */
-.vest .v-ticker{position:absolute;left:0;right:0;bottom:0;height:44px;z-index:7;background:var(--gold);color:#140f02;overflow:hidden;display:flex;align-items:center}
-.vest .v-ticker div{display:flex;gap:28px;white-space:nowrap;font:700 15px var(--f-label);letter-spacing:.2em;text-transform:uppercase;animation:vtick 38s linear infinite;padding-left:28px}
-.vest .v-ticker i{font-style:normal;opacity:.55}
-@keyframes vtick{to{transform:translateX(-50%)}}
-/* arara */
-.vest .v-stage{position:absolute;inset:0 0 44px 0;z-index:3;cursor:grab;touch-action:pan-y}
-.vest .v-stage.v-drag{cursor:grabbing}
-.vest .v-track{position:absolute;left:0;top:0;height:100%;z-index:5;will-change:transform}
-.vest .v-shirt{position:absolute;top:0;background:none;border:0;padding:0;cursor:pointer;transform-origin:50% 12%;transition:filter .4s,opacity .4s;-webkit-tap-highlight-color:transparent}
-.vest .v-shirt canvas{display:block;width:100%;height:100%;pointer-events:none;filter:drop-shadow(-10px 14px 16px rgba(0,0,0,.5))}
+.vest .v-pin{position:sticky;top:66px;height:calc(100svh - 66px);min-height:560px;overflow:hidden;isolation:isolate;user-select:none;-webkit-user-select:none}
+.vest .v-wall{position:absolute;inset:-2% -6%;z-index:0;background:#0b0a09 url(vest_bg.webp) center 30%/cover no-repeat;will-change:transform}
+@media (max-width:820px){.vest .v-wall{background-image:url(vest_bg_m.webp)}}
+.vest .v-wall::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,6,5,.55) 0%,rgba(7,6,5,0) 26%,rgba(7,6,5,0) 70%,rgba(7,6,5,.5) 100%)}
+.vest .v-stage{position:absolute;inset:0 0 44px 0;z-index:3}
+.vest .v-track{position:absolute;left:0;top:0;height:100%;will-change:transform}
+/* trilhos dourados, um por grupo, presos no teto */
+.vest .v-rail{position:absolute;height:8px;border-radius:4px;z-index:2;background:linear-gradient(180deg,#fff2c8 0%,#e3bd5f 30%,#9c7222 65%,#d6ae55 85%,#7b5817 100%);box-shadow:0 8px 14px rgba(0,0,0,.6)}
+.vest .v-rail::before,.vest .v-rail::after{content:"";position:absolute;bottom:4px;width:4px;height:4000px;background:linear-gradient(90deg,#7b5817,#e9c873,#7b5817)}
+.vest .v-rail::before{left:6%}.vest .v-rail::after{right:6%}
+.vest .v-lbl{position:absolute;transform:translateX(-50%);white-space:nowrap;z-index:2;font:600 12px var(--f-label);letter-spacing:.32em;text-transform:uppercase;color:rgba(242,238,229,.75);display:flex;align-items:center;gap:10px}
+.vest .v-lbl::before,.vest .v-lbl::after{content:"";width:22px;height:1px;background:var(--gold)}
+.vest .v-lbl b{color:var(--gold)}
+.vest .v-shirt{position:absolute;top:0;background:none;border:0;padding:0;cursor:pointer;transform-origin:50% 0;transition:filter .5s,opacity .5s;-webkit-tap-highlight-color:transparent;z-index:3}
+.vest .v-shirt canvas{display:block;width:100%;height:100%;pointer-events:none;filter:drop-shadow(-12px 16px 18px rgba(0,0,0,.55))}
 .vest .v-hook{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.vest .v-tag{position:absolute;left:50%;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe7a3,#d4a43c 55%,#8e6519);color:#1b1306;font:800 11px/26px var(--f-label);text-align:center;box-shadow:0 3px 6px rgba(0,0,0,.5);pointer-events:none}
-.vest .v-shirt:hover,.vest .v-shirt.v-near{filter:brightness(1.15)}
-.vest.v-filtering .v-shirt.v-off{opacity:.25;filter:brightness(.5) blur(1px)}
-.vest.v-open .v-shirt{opacity:.35;filter:brightness(.45) blur(2.5px)}
-.vest.v-open .v-stage{cursor:default}
-.vest .v-dim{position:absolute;inset:0;z-index:8;background:radial-gradient(60% 70% at 35% 45%,rgba(0,0,0,.2),rgba(0,0,0,.65));opacity:0;pointer-events:none;transition:opacity .6s}
-.vest.v-open .v-dim{opacity:1}
-/* barra superior: filtros */
-.vest .v-top{position:absolute;left:clamp(16px,3vw,40px);right:clamp(16px,3vw,40px);top:clamp(14px,2.4vh,24px);z-index:9;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;transition:opacity .4s}
+.vest .v-tag{position:absolute;left:50%;width:24px;height:24px;margin:0 0 0 -12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a8,#d4a43c 55%,#8e6519);color:#1b1306;font:800 10px/24px var(--f-label);text-align:center;box-shadow:0 3px 6px rgba(0,0,0,.55);pointer-events:none}
+.vest .v-shirt.v-hot{filter:brightness(1.12)}
+.vest.v-filtering .v-shirt.v-off{opacity:.22;filter:brightness(.5) blur(1px)}
+.vest.v-open .v-shirt{opacity:.3;filter:brightness(.4) blur(3px)}
+.vest .v-dim{position:absolute;inset:0;z-index:8;background:radial-gradient(55% 70% at 36% 45%,rgba(0,0,0,.15),rgba(0,0,0,.7));opacity:0;pointer-events:none;transition:opacity .6s}
+.vest.v-open .v-dim{opacity:1;pointer-events:auto}
+/* topo */
+.vest .v-top{position:absolute;left:clamp(16px,3vw,40px);right:clamp(16px,3vw,40px);top:clamp(14px,2.4vh,24px);z-index:9;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;transition:opacity .4s;pointer-events:none}
 .vest .v-ttl .eyebrow{display:block;font-size:12px}
 .vest .v-ttl b{display:block;font:900 clamp(26px,3.2vw,44px)/.92 var(--f-display);text-transform:uppercase;margin-top:6px}
 .vest .v-ttl b em{font-style:normal;color:var(--gold)}
-.vest .v-pills{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.vest .v-pills{display:flex;gap:6px;pointer-events:auto}
 .vest .v-pills button{height:34px;padding:0 14px;border-radius:20px;border:1px solid rgba(242,238,229,.18);background:rgba(10,9,8,.6);color:#f2eee5;font:700 12px var(--f-label);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;backdrop-filter:blur(6px)}
 .vest .v-pills button span{opacity:.5;margin-left:4px}
 .vest .v-pills button[aria-pressed=true]{background:#f2eee5;color:#140f02;border-color:#f2eee5}
-.vest.v-open .v-top{opacity:0;pointer-events:none}
-.vest .v-foot{position:absolute;right:clamp(16px,3vw,40px);bottom:60px;z-index:9;display:flex;align-items:center;gap:16px;transition:opacity .4s}
+.vest.v-open .v-top{opacity:0}
+.vest .v-foot{position:absolute;left:clamp(16px,3vw,40px);right:clamp(16px,3vw,40px);bottom:60px;z-index:9;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:opacity .4s}
 .vest .v-foot span{font:600 12px var(--f-label);letter-spacing:.26em;text-transform:uppercase;color:rgba(242,238,229,.6)}
+.vest .v-prog{flex:1;max-width:220px;height:2px;background:rgba(242,238,229,.15);position:relative}
+.vest .v-prog i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--gold)}
 .vest .v-foot .btn{height:42px;border-radius:24px}
 .vest.v-open .v-foot{opacity:0;pointer-events:none}
+/* faixa dourada */
+.vest .v-ticker{position:absolute;left:0;right:0;bottom:0;height:44px;z-index:9;background:var(--gold);color:#140f02;overflow:hidden;display:flex;align-items:center}
+.vest .v-ticker div{display:flex;gap:28px;white-space:nowrap;font:700 15px var(--f-label);letter-spacing:.2em;text-transform:uppercase;animation:vtick 40s linear infinite;padding-left:28px}
+.vest .v-ticker i{font-style:normal;opacity:.55}
+@keyframes vtick{to{transform:translateX(-50%)}}
 /* camisa aberta + ficha */
-.vest .v-show{position:absolute;z-index:9;pointer-events:none}
-.vest .v-show canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.65))}
+.vest .v-show{position:absolute;z-index:9;cursor:grab;touch-action:none}
+.vest .v-show.v-drag{cursor:grabbing}
+.vest .v-show canvas{width:100%;height:100%;display:block;filter:drop-shadow(0 30px 40px rgba(0,0,0,.65));pointer-events:none}
+.vest .v-spin{position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);white-space:nowrap;font:600 11px var(--f-label);letter-spacing:.26em;text-transform:uppercase;color:rgba(242,238,229,.7);display:flex;align-items:center;gap:8px;pointer-events:none;transition:opacity .4s}
+.vest .v-spin::before{content:"⟷";color:var(--gold);letter-spacing:0;font-size:14px}
 .vest .v-card{position:absolute;z-index:10;right:clamp(16px,6vw,110px);top:50%;width:min(380px,36vw);transform:translate(30px,-50%);opacity:0;pointer-events:none;
   background:rgba(16,13,11,.9);border:1px solid rgba(242,238,229,.12);border-radius:14px;padding:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:opacity .45s .2s,transform .6s .2s cubic-bezier(.2,.8,.2,1);box-shadow:0 30px 80px rgba(0,0,0,.55)}
 .vest.v-open .v-card{opacity:1;transform:translate(0,-50%);pointer-events:auto}
@@ -83,10 +76,9 @@
 .vest .v-card .v-ic:hover,.vest .v-card .v-x:hover{border-color:var(--gold);color:var(--gold-hi)}
 .vest .v-card .v-note{font-size:12px;color:rgba(242,238,229,.45);margin:10px 0 0}
 @media (max-width:820px){
-  .vest{height:clamp(560px,calc(100svh - 60px),780px)}
-  .vest .v-pills{display:none}
-  .vest .v-foot span{display:none}
-  .vest .v-foot{right:50%;transform:translateX(50%);bottom:56px}
+  .vest{height:calc(100svh + 170vh)}
+  .vest .v-pin{top:60px;height:calc(100svh - 60px)}
+  .vest .v-pills,.vest .v-foot span{display:none}
   .vest .v-card{left:10px;right:10px;width:auto;top:auto;bottom:54px;transform:translate(0,30px);padding:16px}
   .vest.v-open .v-card{transform:none}
   .vest .v-card .v-num{font-size:48px}.vest .v-card h3{font-size:28px}
