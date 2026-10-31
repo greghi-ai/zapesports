@@ -157,6 +157,7 @@ main{position:relative;background:radial-gradient(ellipse at 50% 45%,#24211b 0%,
   <div class="sum" id="sum"></div>
   <button class="reset" id="reset">↺ Recomeçar</button>
   <a class="cta" id="wa" href="#" target="_blank" rel="noopener">Enviar no WhatsApp</a>
+  <p class="note" id="waNote" style="margin-top:10px">O resumo é copiado ao enviar: é só colar na conversa do WhatsApp.</p>
 </aside>
 </div>
 
@@ -166,7 +167,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 
-const WA_NUMBER=''; // número da loja, ex.: 5511999999999
+const WA_LINK='https://wa.me/message/FXHQZUO3JYMRL1'; // link de mensagem da ZAPE: o resumo é copiado e o WhatsApp abre
 const MODELS={
  m23:{name:'M-23',sub:'Gola V'},
  campnou:{name:'Camp Nou',sub:'Gola redonda'},
@@ -428,7 +429,7 @@ function summary(){
   if(!orig)lines.push(`• Cores: camisa ${colorName(st.c1)}, detalhes ${colorName(st.c2)}, mangas ${colorName(st.c3)}, short ${colorName(st.cs)}, meião ${colorName(st.cm)}`);
   lines.push(`• Escudo: ${st.crest?'vou enviar o arquivo':'não'}`);if(sp.length)lines.push(`• Patrocínios: ${sp.join('; ')}`);if(st.nome||st.numero)lines.push(`• Nome/número: ${st.nome} ${st.numero} (fonte: ${FONTS[st.font][1]?FONTS[st.font][0]:'outra, vou enviar aqui'})`);
   lines.push('Quero um orçamento.');
-  $('#wa').href=`https://wa.me/${WA_NUMBER}?text=`+encodeURIComponent(lines.join('\n'));
+  $('#wa').href=WA_LINK;$('#wa').dataset.msg=lines.join('\n');
 }
 // views
 let tween=null,needRender=true;
@@ -436,6 +437,7 @@ function goView(v){$$('.views button').forEach(x=>x.classList.toggle('on',x.data
   const ang={front:0,side:Math.PI/2,back:Math.PI}[v];const r=Math.hypot(cam.position.x,cam.position.z);
   const from=Math.atan2(cam.position.x,cam.position.z);let d=ang-from;d=Math.atan2(Math.sin(d),Math.cos(d));tween={from,d,r,y:cam.position.y,t0:performance.now()};}
 $$('.views button').forEach(b=>b.onclick=()=>goView(b.dataset.v));
+$('#wa').addEventListener('click',()=>{try{navigator.clipboard.writeText($('#wa').dataset.msg||'');}catch(_){}const n=$('#waNote');if(n)n.hidden=false;});
 canvas.addEventListener('pointerdown',()=>{tween=null;});
 ctl.addEventListener('change',()=>needRender=true);
 function resize(){const r=canvas.parentElement.getBoundingClientRect();renderer.setSize(r.width,r.height,false);cam.aspect=r.width/r.height;cam.updateProjectionMatrix();needRender=true;}

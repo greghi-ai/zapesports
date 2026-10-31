@@ -289,7 +289,7 @@ fieldset.field{border:0;padding:0;margin:0}
 
 <script>
 (() => {
-const WHATSAPP = '5500000000000'; // número da ZAPE
+const WHATSAPP_LINK = 'https://wa.me/message/FXHQZUO3JYMRL1'; // link de mensagem da ZAPE
 const SITE = 'zapesportwear.com.br/pedido/';
 const I = {
   pag:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
@@ -398,7 +398,7 @@ function renderClient(){
     app.querySelector('#go').onclick = go; app.querySelector('#code').addEventListener('keydown', e=>{ if(e.key==='Enter') go(); }); return; }
   const s = cur(o), last = o.hist[o.hist.length-1], [ic, name, desc] = STAGES[s];
   const photo = [...o.hist].reverse().find(x=>x.st===s && x.img);
-  const wa = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Olá, ZAPE! Sou do ${o.time}, pedido ${o.id}.`)}`;
+  const wa = WHATSAPP_LINK;
   const done = s===N-1;
   const pay = due(o);
   const payCard = pay ? `<section class="paycard" aria-label="Pagamento">
@@ -618,7 +618,7 @@ const CATALOGO = [
   {id:'berlim', nome:'Regata Berlim', tipo:'Regata', cat:'regata', pecas:['regata'], tecidos:['liso','colmeia','3d'], feat:'Gola e cavas em retilínea\nRecorte na lateral\nSelo de autenticidade', tam:'Masculino, do infantil ao GG. Plus size sob consulta', foto:'assets/p_berlim.jpg', on:true},
   {id:'sansiro', nome:'Short San Siro', tipo:'Short', cat:'short', pecas:['short'], tecidos:['tactel'], feat:'Tecido tactel\nBolso e recorte na lateral', tam:'P ao GG', foto:'assets/p_sansiro.jpg', on:true},
 ];
-const LOJA = {wa:'', insta:'@zapesportwear', horario:'Seg a sex, 9h às 18h · Sáb, 9h às 13h', cidade:'', sobre:'Uniformes sob encomenda para futebol, várzea, basquete e eventos.'};
+const LOJA = {wa:'https://wa.me/message/FXHQZUO3JYMRL1', insta:'@zapesportwear', horario:'Horário comercial, 8h às 18h', cidade:'Praia Grande · SP', sobre:'Uniformes sob encomenda para futebol, várzea, basquete e eventos.'};
 if (!Array.isArray(DB.catalogo)) DB.catalogo = JSON.parse(JSON.stringify(CATALOGO));
 if (!DB.loja) DB.loja = {...LOJA};
 let siteTab = 'catalogo', catFilter = 'todos';

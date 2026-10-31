@@ -783,11 +783,13 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
   <div class="wrap">
     <img src="assets/logo.png" alt="ZAPE Sport Wear">
     <dl>
-      <dt>WhatsApp</dt><dd>(00) 00000-0000</dd>
-      <dt>Instagram</dt><dd>@zapesportwear</dd>
-      <dt>Atendimento</dt><dd>Seg a sex, 9h às 18h</dd>
+      <dt>WhatsApp</dt><dd><a href="https://wa.me/message/FXHQZUO3JYMRL1" target="_blank" rel="noopener">Chamar no WhatsApp</a></dd>
+      <dt>Instagram</dt><dd><a href="https://www.instagram.com/zapesportwear/" target="_blank" rel="noopener">@zapesportwear</a></dd>
+      <dt>E-mail</dt><dd><a href="mailto:zapesportwear@hotmail.com">zapesportwear@hotmail.com</a></dd>
+      <dt>Atendimento</dt><dd>Horário comercial, 8h às 18h</dd>
+      <dt>Local</dt><dd>Praia Grande · SP</dd>
     </dl>
-    <p>© 2026 ZAPE Sport Wear</p>
+    <p>© 2026 ZAPE Sport Wear · CNPJ 44.242.608/0001-06</p>
   </div>
 </footer>
 
@@ -811,7 +813,7 @@ legend{font-family:var(--f-label);font-weight:600;font-size:13px;letter-spacing:
 <script>
 (() => {
 /* ====== CONFIGURAÇÃO DA LOJA ====== */
-const WHATSAPP = '5500000000000'; // trocar pelo número da ZAPE (55 + DDD + número)
+const WHATSAPP_LINK = 'https://wa.me/message/FXHQZUO3JYMRL1'; // link de mensagem da ZAPE (não aceita texto pronto: a mensagem é copiada antes de abrir)
 
 const ESCUDOS = [['sublimado','Sublimado'],['bordado','Bordado'],['emborrachado','Emborrachado']];
 const KIT_FEAT = ['Tecidos 3D, colmeia ou liso','Pentilho e recorte Aero Dry','Nome e número individual','Etiqueta de autenticidade'];
@@ -1121,7 +1123,7 @@ function openCart(){
       ${cart.length?`<footer>
         <a class="btn btn-wa" id="sendWa" href="#" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
         <button class="linkish" type="button" id="copyMsg">Copiar mensagem</button>
-        <span>Tudo é feito sob encomenda. O valor é passado no atendimento.</span>
+        <span>Ao enviar, o resumo do pedido é copiado: é só colar na conversa do WhatsApp. Tudo é feito sob encomenda e o valor é passado no atendimento.</span>
       </footer>`:''}
     </aside></div>`;
   document.body.style.overflow='hidden';
@@ -1132,9 +1134,9 @@ function openCart(){
   if (wa){
     const q = s => root.querySelector(s);
     const sync = () => { lead = {nome:q('#fNome').value.trim(), time:q('#fTime').value.trim(), cidade:q('#fCidade').value.trim(), obs:q('#fObs').value.trim()}; save();
-      wa.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message())}`; };
+      wa.href = WHATSAPP_LINK; };
     q('#leadForm').addEventListener('input', sync); sync();
-    wa.addEventListener('click', e => { sync(); if(!lead.nome || !lead.time){ e.preventDefault(); q('#fErr').hidden=false; (lead.nome?q('#fTime'):q('#fNome')).focus(); } });
+    wa.addEventListener('click', e => { sync(); if(!lead.nome || !lead.time){ e.preventDefault(); q('#fErr').hidden=false; (lead.nome?q('#fTime'):q('#fNome')).focus(); return; } try{ navigator.clipboard.writeText(message()); }catch(_){} });
     q('#copyMsg').addEventListener('click', async e => { sync(); try{ await navigator.clipboard.writeText(message()); e.target.textContent='Mensagem copiada'; }catch(_){ e.target.textContent='Não deu para copiar aqui'; } });
   }
   root.querySelector('.close').focus();
