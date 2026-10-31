@@ -449,6 +449,11 @@ renderer.setAnimationLoop(()=>{
 });
 syncSwatches();refreshPats();
 document.fonts?.ready.then(()=>{refreshPats();if(cache[st.model])repaint();});
+// vindo da arara do site: ?m=modelo&nome=...&num=...
+{const q=new URLSearchParams(location.search),m=q.get('m');
+  if(m&&MODELS[m]){st.model=m;$$('.mdl').forEach(x=>x.classList.toggle('on',x.dataset.m===m));}
+  const nm=(q.get('nome')||'').slice(0,14),nu=(q.get('num')||'').replace(/\D/g,'').slice(0,2);
+  if(nm){st.nome=nm;$('.slot[data-s=nome] input').value=nm;} if(nu){st.numero=nu;$('.slot[data-s=numero] input').value=nu;}}
 build(st.model);
 window.__st=st;window.__goView=goView;window.__repaint=repaint;
 </script>
