@@ -87,3 +87,14 @@
 }
 @media (prefers-reduced-motion:reduce){.vest *{transition:none!important;animation:none!important}}
 .showroom[hidden]{display:none!important}
+
+/* ---- 3D ---- */
+.vest .v-gl{position:absolute;left:0;top:0;display:block;touch-action:pan-y}
+.vest.v-open .v-gl{touch-action:none}
+.vest .v-stage .v-tag{left:-12px;top:-12px;margin:0;transition:opacity .4s;z-index:4}
+.vest .v-stage .v-lbl{left:0;top:0;transition:opacity .4s;z-index:4}
+.vest .v-dim{z-index:2!important;pointer-events:none!important}
+.vest .v-hint3d{position:absolute;z-index:5;left:36%;bottom:70px;transform:translateX(-50%);font:600 11px var(--f-label);letter-spacing:.26em;text-transform:uppercase;color:rgba(242,238,229,.7);opacity:0;transition:opacity .5s .6s;pointer-events:none}
+.vest .v-hint3d::before{content:"⟷  ";color:var(--gold);letter-spacing:0}
+.vest.v-open .v-hint3d{opacity:1}
+@media (max-width:820px){.vest .v-hint3d{left:50%;bottom:auto;top:14%}}
